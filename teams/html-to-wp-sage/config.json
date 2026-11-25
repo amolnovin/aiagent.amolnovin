@@ -4,7 +4,7 @@
   "version": "1.0",
   "created": "2026-11-25",
   "language": "fa",
-  "description": "تیم ۱۳ نفره‌ی تبدیل قالب‌های HTML استاتیک به قالب وردپرس استاندارد با معماری Sage 11 بدون Composer؛ خروجی: قالب ریسپانسیو برای هر حوزه‌ی کاری با Lighthouse بالای ۹۰، سئوی حرفه‌ای، آنالیز رقبای فارسی و غیرفارسی، افزونه‌های داخلی و بازبینی مستقل UI/UX",
+  "description": "تیم ۱۴ نفره‌ی تبدیل قالب‌های HTML استاتیک به قالب وردپرس استاندارد با معماری Sage 11 بدون Composer؛ خروجی: قالب ریسپانسیو برای هر حوزه‌ی کاری با Lighthouse بالای ۹۰، سئوی حرفه‌ای، آنالیز رقبای فارسی و غیرفارسی، افزونه‌های داخلی، بازبینی مستقل UI/UX و تصاویر/مدیا بهینه (پک آیکون + تصاویر مرتبط)",
   "hard_requirements": {
     "framework": "Sage 11 style architecture without Composer (no composer.json, no vendor/)",
     "performance": "Lighthouse >= 90 (mobile and desktop), LCP <= 2.5s, INP <= 200ms, CLS <= 0.1",
@@ -34,7 +34,7 @@
       "playbook": "agents/01-team-lead.md",
       "responsibilities": [
         "گرفتن بریف و تعریف حوزه‌ی کاری",
-        "توزیع کار بین ۱۳ ایجنت و کنترل دروازه‌های مرحله",
+        "توزیع کار بین ۱۴ ایجنت و کنترل دروازه‌های مرحله",
         "Decision Log و رفع اختلاف",
         "بسته‌بندی تحویل نهایی و docs"
       ]
@@ -254,6 +254,24 @@
         "نقشه‌ی راه‌حل اولویت‌بندی‌شده P0/P1/P2 با مسئول",
         "بستن P0ها قبل از مراحل INTEGRATE به بعد"
       ]
+    },
+    {
+      "id": "14-media-assets",
+      "code": "MEDIA",
+      "name": "آیدا",
+      "role": "متخصص تصاویر و مدیا",
+      "name_en": "Media & Visual Assets Specialist",
+      "emoji": "🖼️",
+      "color": "#ea580c",
+      "tag": "@media",
+      "stage": "MEDIA",
+      "playbook": "agents/14-media-assets.md",
+      "responsibilities": [
+        "پک آیکون یکدست: گرید ۲۴، sprite، currentColor، RTL-safe",
+        "تصاویر مرتبط با حوزه و برند (AI/کتابخانه مجوزدار/SVG)",
+        "بهینه‌سازی: WebP/AVIF، بودجه hero ≤ ۱۰۰KB، width/height",
+        "media library: نام‌گذاری، alt پیشنهادی، ثبت منبع/مجوز، دارایی‌های برند"
+      ]
     }
   ],
   "pipeline": [
@@ -263,13 +281,14 @@
     "3-STRUCTURE (ARCH+SAGE)",
     "4-CONVERT (CONV)",
     "5-STYLE (CSS)",
-    "6-ASSETS (JS)",
-    "7-UI-REVIEW (UXR)",
-    "8-INTEGRATE (WP)",
-    "9-EXTEND (PLUG)",
-    "10-OPTIMIZE-SEO (SEO)",
-    "11-OPTIMIZE-PERF (PERF)",
-    "12-VERIFY (QA)",
-    "13-SHIP (TL+QA)"
+    "6-MEDIA (MEDIA)",
+    "7-ASSETS (JS)",
+    "8-UI-REVIEW (UXR)",
+    "9-INTEGRATE (WP)",
+    "10-EXTEND (PLUG)",
+    "11-OPTIMIZE-SEO (SEO)",
+    "12-OPTIMIZE-PERF (PERF)",
+    "13-VERIFY (QA)",
+    "14-SHIP (TL+QA)"
   ]
 }
