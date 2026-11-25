@@ -1,26 +1,29 @@
 # پروتکل همکاری تیم — HTML به قالب وردپرس Sage (بدون Composer)
 
-این فایل قانون کار گروهی **۱۰ ایجنت** این تیم است. هر پروژه‌ی تبدیل HTML به قالب وردپرس، این جریان را اجرا می‌کند.
+این فایل قانون کار گروهی **۱۳ ایجنت** این تیم است. هر پروژه‌ی تبدیل HTML به قالب وردپرس، این جریان را اجرا می‌کند.
 
 ---
 
 ## ۱) جریان کار (Pipeline)
 
 ```
- ۰. INTAKE        TL   : بریف، تعریف حوزه کاری، محدودیت‌ها، بودجه عملکرد
- ۱. AUDIT         ARCH : ممیزی HTML منبع، فهرست دارایی‌ها، تصمیم ثالث‌ها
- ۲. STRUCTURE     ARCH + SAGE : قرارداد تبدیل + اسکلت بدون-Composer (autoloader، مینی-Blade، config، routes)
- ۳. CONVERT       CONV : HTML → Blade (layout، partials، components، لوپ‌ها)
- ۴. STYLE         CSS  : توکن‌ها، ریسپانسیو ۳۶۰/۷۶۸/۱۴۴۰، RTL، WCAG
- ۵. ASSETS        JS   : کامپوننت‌های تعاملی، Vite (npm)، حالت no-build
- ۶. INTEGRATE     WP   : هوک‌ها، enqueue، theme.json، Settings API، امنیت، i18n
- ۷. OPTIMIZE-SEO  SEO  : متاتگ‌ها، Schema حوزه، سلسله‌مراتب عنوان، سئوی فارسی
- ۸. OPTIMIZE-PERF PERF : بودجه عملکرد، تصویر/فونت/JS/CSS، اثبات ≥ ۹۰
- ۹. VERIFY        QA   : تست، خطایابی، رگرسیون با منبع، دروازه‌ی انتشار
-۱۰. SHIP          TL + QA : بسته‌ی نهایی + docs + استاندارد قابل‌استفاده‌ی مجدد حوزه
+ ۰. INTAKE        TL        : بریف، تعریف حوزه کاری، محدودیت‌ها، بودجه عملکرد
+ ۱. AUDIT         ARCH      : ممیزی HTML منبع، فهرست دارایی‌ها، تصمیم ثالث‌ها
+ ۲. BENCHMARK     BENCH     : آنالیز رقبای فارسی و غیرفارسی، الگوهای برتر، شکاف‌های سئو
+ ۳. STRUCTURE     ARCH + SAGE : قرارداد تبدیل + اسکلت بدون-Composer (autoloader، مینی-Blade، config، routes)
+ ۴. CONVERT       CONV      : HTML → Blade (layout، partials، components، لوپ‌ها)
+ ۵. STYLE         CSS       : توکن‌ها، ریسپانسیو ۳۶۰/۷۶۸/۱۴۴۰، RTL، WCAG
+ ۶. ASSETS        JS        : کامپوننت‌های تعاملی، Vite (npm)، حالت no-build
+ ۷. UI-REVIEW     UXR       : بازبینی مستقل UI/UX + نقشه‌ی راه‌حل‌های اولویت‌بندی‌شده (P0/P1/P2)
+ ۸. INTEGRATE     WP        : هوک‌ها، enqueue، theme.json، Settings API، امنیت، i18n
+ ۹. EXTEND        PLUG      : افزونه‌های داخلی پروژه (فرم‌ها، CPTها، ماژول‌های حوزه)
+۱۰. OPTIMIZE-SEO  SEO       : متاتگ‌ها، Schema حوزه، سلسله‌مراتب عنوان، سئوی فارسی
+۱۱. OPTIMIZE-PERF PERF      : بودجه عملکرد، تصویر/فونت/JS/CSS، اثبات ≥ ۹۰
+۱۲. VERIFY        QA        : تست، خطایابی، رگرسیون با منبع، دروازه‌ی انتشار
+۱۳. SHIP          TL + QA   : بسته‌ی نهایی + docs + استاندارد قابل‌استفاده‌ی مجدد حوزه
 ```
 
-**قاعده:** مراحل ۳ تا ۵ می‌توانند تا حدی موازی بروند، به‌شرطی که **قرارداد تبدیل (Conversion Contract)** در مرحله ۲ امضا شده باشد. مراحل ۷ و ۸ بعد از پایدار شدن markup و build اجرا می‌شوند. مرحله ۹ فقط با PASS می‌بندد.
+**قاعده:** مرحله ۲ (BENCHMARK) موازی با مرحله ۱ اجرا می‌شود و خروجی‌اش ورودی مراحل ۳، ۷ و ۱۰ است. مراحل ۴ تا ۶ می‌توانند تا حدی موازی بروند، به‌شرطی که **قرارداد تبدیل (Conversion Contract)** در مرحله ۳ امضا شده باشد. هیچ مرحله‌ای از ۸ به بعد شروع نمی‌شود مگر اقدامات **P0 مرحله ۷ (UI-REVIEW)** بسته شده باشد. مرحله ۱۲ فقط با PASS می‌بندد.
 
 ---
 
@@ -63,12 +66,15 @@ SOURCE BLOCK            → TARGET FILE                          → DYNAMIC DAT
 |---|---|---|
 | «این HTML را تبدیل کن» / بریف پروژه | TL | ARCH |
 | ممیزی HTML، نقشه‌ی فایل‌ها، قرارداد تبدیل | ARCH | TL |
+| «رقبا را بررسی کن» / آنالیز سایت فارسی و خارجی حوزه | BENCH | SEO + UXR |
 | ساختار پوشه‌ها، autoloader، موتور قالب | SAGE | ARCH |
 | تبدیل بخش‌ها به Blade، لوپ‌ها، فرم‌ها | CONV | SAGE + WP |
 | رنگ، فونت، چیدمان، ریسپانسیو، RTL | CSS | CONV |
 | منوی موبایل، آکاردئون، فرم AJAX، build | JS | WP |
+| بازبینی UI/UX، مشکلات تبدیل و تعامل، راه‌حل | UXR | BENCH + CSS |
 | هوک‌ها، enqueue، theme.json، امنیت، i18n | WP | SAGE + JS |
-| متاتگ، Schema، سلسله‌مراتب عنوان، سئوی فارسی | SEO | WP |
+| افزونه‌ی داخلی: فرم، CPT، ماژول حوزه | PLUG | WP + CONV |
+| متاتگ، Schema، سلسله‌مراتب عنوان، سئوی فارسی | SEO | WP + BENCH |
 | سرعت، Core Web Vitals، تصویر/فونت، کش | PERF | CSS + JS + WP |
 | تست، باگ، خطایابی، رگرسیون، دروازه انتشار | QA | همه |
 | سرعت ≥ ۹۰ و سئوی حرفه‌ای (هر لحظه) | PERF + SEO | TL |
@@ -87,6 +93,11 @@ SOURCE BLOCK            → TARGET FILE                          → DYNAMIC DAT
 **ARCH**
 - [ ] هر بلوک HTML منبع در قرارداد جا دارد (بدون جاافتادگی)
 - [ ] ساختار فایل‌ها با `standards/sage11-structure.md` یکی است
+
+**BENCH**
+- [ ] ۵ تا ۱۰ رقیب فارسی **و** غیرفارسی با لینک و تاریخ بازدید ثبت شده
+- [ ] ماتریس بنچمارک کامل است و هر درس، مسئول و اقدام دارد
+- [ ] شکاف‌های سئو به `SEO` و الگوهای برتر به `ARCH`/`UXR` تحویل داده شده
 
 **SAGE**
 - [ ] بدون Composer و بدون vendor بالا می‌آید؛ `WP_DEBUG` صفر notice
@@ -107,6 +118,16 @@ SOURCE BLOCK            → TARGET FILE                          → DYNAMIC DAT
 **WP**
 - [ ] صفر notice با `WP_DEBUG`؛ escape سه‌لایه؛ nonce + بررسی سمت سرور
 - [ ] منو، لوگو، ویجت، image sizes، textdomain ثبت شده
+
+**UXR**
+- [ ] ارزیابی هیوریستیک ۱۰ اصلی با نمره و شاهد انجام شده
+- [ ] هر مشکل P0/P1 راه‌حل مشخص و مسئول دارد و P0ها قبل از مرحله ۸ بسته شده
+- [ ] نسخه‌ی قبلی بازبینی (در صورت وجود) re-test شده
+
+**PLUG**
+- [ ] هر افزونه با ABSPATH guard، nonce، sanitize/escape و uninstall تمیز
+- [ ] محتوای کارفرما با عوض شدن قالب حفظ می‌شود (CPT در افزونه)
+- [ ] API عمومی افزونه برای `CONV` مستند شده
 
 **SEO**
 - [ ] title/canonical درست؛ یک H1؛ alt واقعی؛ Schema حوزه بدون تداخل افزونه
@@ -135,15 +156,19 @@ SOURCE BLOCK            → TARGET FILE                          → DYNAMIC DAT
 ## ۷) خروجی استاندارد هر پروژه
 
 ```
-theme-name/                      ← قالب نهایی (ساختار sage11-structure.md)
-├── (فایل‌های قالب)
+release/
+├── theme-name/                  ← قالب نهایی (ساختار sage11-structure.md)
+├── plugins/                     ← افزونه‌های داخلی پروژه (PLUG)
+│   └── theme-name-<module>/     # فرم، CPT، ماژول حوزه — مستقل از قالب
 └── docs/
+    ├── 00-benchmark-report.md   # آنالیز رقبای فارسی و غیرفارسی (BENCH)
     ├── 01-brief.md              # بریف تأییدشده + Decision Log
     ├── 02-conversion-report.md  # جدول تبدیل HTML → WP
     ├── 03-seo-report.md         # متاتگ‌ها، Schema، چک‌لیست سئو
     ├── 04-performance-report.md # اثبات Lighthouse ≥ ۹۰ (قبل/بعد)
     ├── 05-qa-report.md          # ماتریس تست، باگ‌ها، PASS/FAIL
-    └── 06-domain-standard.md    # استاندارد قابل استفاده‌ی مجدد این حوزه
+    ├── 06-domain-standard.md    # استاندارد قابل استفاده‌ی مجدد این حوزه
+    └── 07-ui-ux-review.md       # بازبینی UI/UX و نقشه‌ی بهبودها (UXR)
 ```
 
 **نکته‌ی حوزه‌ای:** هر پروژه علاوه بر قالب، یک `06-domain-standard.md` تولید می‌کند تا نوبت بعدی همان حوزه (مثلاً «پزشکی») بدون شروع از صفر، با همان الگوها، بودجه و Schema ساخته شود.
