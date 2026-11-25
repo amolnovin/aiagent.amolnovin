@@ -1,0 +1,218 @@
+{
+  "team_name": "HTML to Sage WP Team - تیم تبدیل HTML به قالب وردپرس Sage",
+  "package": "html-to-wp-sage",
+  "version": "1.0",
+  "created": "2026-11-25",
+  "language": "fa",
+  "description": "تیم ۱۰ نفره‌ی تبدیل قالب‌های HTML استاتیک به قالب وردپرس استاندارد با معماری Sage 11 بدون Composer؛ خروجی: قالب ریسپانسیو برای هر حوزه‌ی کاری با Lighthouse بالای ۹۰ و سئوی حرفه‌ای",
+  "hard_requirements": {
+    "framework": "Sage 11 style architecture without Composer (no composer.json, no vendor/)",
+    "performance": "Lighthouse >= 90 (mobile and desktop), LCP <= 2.5s, INP <= 200ms, CLS <= 0.1",
+    "seo": "professional: meta map, domain Schema.org, heading hierarchy, Persian SEO",
+    "responsive": "360 / 768 / 1024 / 1440 px, RTL-first, WCAG 2.2 AA"
+  },
+  "shared_knowledge": [
+    "TEAM.md",
+    "standards/sage11-structure.md",
+    "standards/conversion-checklist.md"
+  ],
+  "templates": [
+    "templates/PROJECT_BRIEF.md",
+    "templates/CONVERSION_REPORT.md"
+  ],
+  "agents": [
+    {
+      "id": "01-team-lead",
+      "code": "TL",
+      "name": "کاوه",
+      "role": "سرپرست گروه",
+      "name_en": "Team Lead & Orchestrator",
+      "emoji": "🧑‍✈️",
+      "color": "#1d4ed8",
+      "tag": "@tl",
+      "stage": "INTAKE, SHIP",
+      "playbook": "agents/01-team-lead.md",
+      "responsibilities": [
+        "گرفتن بریف و تعریف حوزه‌ی کاری",
+        "توزیع کار بین ۱۰ ایجنت و کنترل دروازه‌های مرحله",
+        "Decision Log و رفع اختلاف",
+        "بسته‌بندی تحویل نهایی و docs"
+      ]
+    },
+    {
+      "id": "02-theme-architect",
+      "code": "ARCH",
+      "name": "آراد",
+      "role": "معمار قالب",
+      "name_en": "Theme Architect",
+      "emoji": "📐",
+      "color": "#0f766e",
+      "tag": "@arch",
+      "stage": "AUDIT, STRUCTURE",
+      "playbook": "agents/02-theme-architect.md",
+      "responsibilities": [
+        "ممیزی HTML منبع و فهرست دارایی‌ها",
+        "قرارداد تبدیل ۱:۱ و نقشه‌ی template hierarchy",
+        "ساختار فایل‌ها مطابق sage11-structure.md",
+        "تصمیم keep/replace/drop برای ثالث‌ها"
+      ]
+    },
+    {
+      "id": "03-sage-blade-engineer",
+      "code": "SAGE",
+      "name": "ساغر",
+      "role": "مهندس هسته‌ی Sage/Blade",
+      "name_en": "Sage & Blade Core Engineer",
+      "emoji": "🧱",
+      "color": "#7c3aed",
+      "tag": "@blade",
+      "stage": "STRUCTURE",
+      "playbook": "agents/03-sage-blade-engineer.md",
+      "responsibilities": [
+        "bootstrap و autoloader سفارشی بدون Composer",
+        "موتور مینی-Blade با کش کامپایل",
+        "helpers (view/config/asset) و Service Provider سبک",
+        "اثبات راه‌اندازی بدون vendor با WP_DEBUG تمیز"
+      ]
+    },
+    {
+      "id": "04-html-converter",
+      "code": "CONV",
+      "name": "نوید",
+      "role": "مهندس تبدیل HTML",
+      "name_en": "HTML Conversion Engineer",
+      "emoji": "🔁",
+      "color": "#ea580c",
+      "tag": "@convert",
+      "stage": "CONVERT",
+      "playbook": "agents/04-html-converter.md",
+      "responsibilities": [
+        "تبدیل layout/partial/components به Blade",
+        "جایگزینی استاتیک با داده‌ی وردپرس (منو، لوپ، تصویر)",
+        "فرم‌های nonce‌دار با escape",
+        "جدول تبدیل و رگرسیون وفاداری به منبع"
+      ]
+    },
+    {
+      "id": "05-css-responsive",
+      "code": "CSS",
+      "name": "نگین",
+      "role": "مهندس CSS و ریسپانسیو",
+      "name_en": "CSS & Responsive Engineer",
+      "emoji": "🎨",
+      "color": "#db2777",
+      "tag": "@css",
+      "stage": "STYLE",
+      "playbook": "agents/05-css-responsive-engineer.md",
+      "responsibilities": [
+        "Design tokens و CSS مدرن",
+        "ریسپانسیو ۳۶۰/۷۶۸/۱۰۲۴/۱۴۴۰ بدون اسکرول افقی",
+        "RTL با logical properties و تایپوگرافی فارسی",
+        "کنتراست WCAG و focus-visible"
+      ]
+    },
+    {
+      "id": "06-js-build",
+      "code": "JS",
+      "name": "سامیار",
+      "role": "مهندس JS و Build",
+      "name_en": "JavaScript & Build Engineer",
+      "emoji": "⚙️",
+      "color": "#0891b2",
+      "tag": "@js",
+      "stage": "ASSETS",
+      "playbook": "agents/06-js-build-engineer.md",
+      "responsibilities": [
+        "کامپوننت‌های تعاملی بدون jQuery",
+        "Vite با npm (بدون Composer) و خروجی هش‌دار",
+        "حالت no-build برای میزبان بدون Node",
+        "فرم‌های fetch با nonce و پیام خطا"
+      ]
+    },
+    {
+      "id": "07-wordpress-integrator",
+      "code": "WP",
+      "name": "مهرداد",
+      "role": "یکپارچه‌ساز وردپرس",
+      "name_en": "WordPress Integration Engineer",
+      "emoji": "🔌",
+      "color": "#2563eb",
+      "tag": "@wp",
+      "stage": "INTEGRATE",
+      "playbook": "agents/07-wordpress-integrator.md",
+      "responsibilities": [
+        "هوک‌ها، theme supports، منو، ویجت، image sizes",
+        "enqueue از manifest Vite با fallback",
+        "Settings API و theme.json هم‌گام با توکن‌ها",
+        "امنیت (nonce/escape) و i18n و سازگاری افزونه"
+      ]
+    },
+    {
+      "id": "08-seo-specialist",
+      "code": "SEO",
+      "name": "سپیده",
+      "role": "متخصص سئو",
+      "name_en": "SEO Specialist",
+      "emoji": "🔍",
+      "color": "#16a34a",
+      "tag": "@seo",
+      "stage": "OPTIMIZE-SEO",
+      "playbook": "agents/08-seo-specialist.md",
+      "responsibilities": [
+        "متاتگ‌ها، canonical، تداخل نداشتن با افزونه‌ی سئو",
+        "Schema.org بر اساس حوزه‌ی کاری",
+        "سلسله‌مراتب H1/H2/H3 و alt واقعی",
+        "سئوی فارسی: نیم‌فاصله، متا ۱۲۰-۱۵۵ نویسه"
+      ]
+    },
+    {
+      "id": "09-performance",
+      "code": "PERF",
+      "name": "آوین",
+      "role": "متخصص عملکرد",
+      "name_en": "Performance Engineer",
+      "emoji": "🚀",
+      "color": "#dc2626",
+      "tag": "@perf",
+      "stage": "OPTIMIZE-PERF",
+      "playbook": "agents/09-performance-engineer.md",
+      "responsibilities": [
+        "بودجه‌ی عملکرد و اندازه‌گیری قبل/بعد",
+        "Core Web Vitals: LCP/INP/CLS",
+        "بهینه‌سازی تصویر، فونت subset، critical CSS",
+        "اثبات Lighthouse ≥ ۹۰ با شاهد"
+      ]
+    },
+    {
+      "id": "10-qa-debug",
+      "code": "QA",
+      "name": "ژینا",
+      "role": "مدیر تست و خطایابی",
+      "name_en": "QA & Debug Lead",
+      "emoji": "🧪",
+      "color": "#9333ea",
+      "tag": "@qa",
+      "stage": "VERIFY",
+      "playbook": "agents/10-qa-debug-lead.md",
+      "responsibilities": [
+        "خطایابی WP_DEBUG و ریشه‌یابی باگ‌ها",
+        "ماتریس ریسپانسیو/RTL/کیبورد/امنیت",
+        "رگرسیون با HTML منبع",
+        "دروازه‌ی انتشار PASS/FAIL"
+      ]
+    }
+  ],
+  "pipeline": [
+    "0-INTAKE (TL)",
+    "1-AUDIT (ARCH)",
+    "2-STRUCTURE (ARCH+SAGE)",
+    "3-CONVERT (CONV)",
+    "4-STYLE (CSS)",
+    "5-ASSETS (JS)",
+    "6-INTEGRATE (WP)",
+    "7-OPTIMIZE-SEO (SEO)",
+    "8-OPTIMIZE-PERF (PERF)",
+    "9-VERIFY (QA)",
+    "10-SHIP (TL+QA)"
+  ]
+}
