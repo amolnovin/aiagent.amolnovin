@@ -34,7 +34,8 @@
 ```
 {brand}-novin/                  ← نام فولدر = slug برند + novin (مثلا sayana-novin)
 ├── style.css                    ← فقط متادیتای وردپرس (Name: {brand} نوین, Version, Text Domain)
-├── functions.php                ← فقط: defined('ABSPATH') + require bootstrap/init.php (زیر ۱۰ خط)
+├── functions.php                ← فقط: گارد ABSPATH + گارد نسخهٔ PHP + گارد is_file
+│                                   + require_onceهای bootstrap/init.php (بدون تعریف/هوک اضافه)
 ├── theme.json                   ← رنگ/فونت/layout هم‌گام با tokens.css
 ├── index.php                    ← fallback وردپرس (اجباری)
 ├── screenshot.png               ← ۱۲۴۰×۹۶۰
@@ -142,13 +143,24 @@
 
 ### نقطه‌ی اتصال با وردپرس
 ```php
-// functions.php — فقط این:
+// functions.php — فقط این (الگوی کامل: fatal-error-prevention.md §2):
 <?php
 defined('ABSPATH') || exit;
-require get_template_directory() . '/bootstrap/init.php';
+
+if (version_compare(PHP_VERSION, '8.1', '<')) {   // گارد PHP قدیمی → اعلان + return
+    add_action('admin_notices', /* پیام فارسی */);
+    return;
+}
+if (! is_file(__DIR__ . '/bootstrap/init.php')) { // گارد بیلد ناقص → اعلان + return
+    add_action('admin_notices', /* «فایل‌های قالب کامل نیستند» */);
+    return;
+}
+require_once __DIR__ . '/bootstrap/init.php';     // هرگز require بدون _once
 ```
-- منطق enqueue، هوک‌ها و Settings API در `app/Providers/*` ثبت می‌شوند، نه در `functions.php`.
+- منطق enqueue، هوک‌ها و Settings API در `app/Providers/*` ثبت می‌شوند، نه در `functions.php`
+  (تنها استثنا: هوک‌های `admin_notices` برای گاردهای بالا).
 - خروجی `assets/build/manifest.json` توسط `AssetServiceProvider` خوانده می‌شود؛ در نبود manifest از `assets/js` fallback استفاده می‌شود.
+- دروازه‌ی کنترل: `python3 scripts/validate_theme.py release/{slug}/` باید سبز باشد.
 
 ### نام‌گذاری
 | چیز | قاعده | مثال |
@@ -192,6 +204,9 @@ app/Engine/
 
 ## ۲-ج) پنل تنظیمات قالب (مال `WP` + `PLUG`)
 
+> **سند مرجع کامل و جزئیات پیاده‌سازی: [`theme-settings-standard.md`](theme-settings-standard.md)**
+> (استخراج‌شده از ۸ قالب واقعی تیم — `knowledge/real-themes-survey.md`). در صورت تعارض، آن سند حرف اول را می‌زند.
+
 هر قالب یک **تنظیمات قالب (Theme Settings)** در پیشخوان وردپرس دارد — زیرمنوی «تنظیمات قالب {brand} نوین» با تب‌های زیر (ساختار: `inc/settings/` + Settings API):
 
 | تب | کلید option | محتوا |
@@ -205,10 +220,12 @@ app/Engine/
 | **بروزرسانی** | `theme_updates_*` | نسخه‌ی فعلی، **بروزرسانی از طریق patch** (بخش زیر) |
 
 **قواعد پنل:**
-1. همه‌ی فیلدها با `register_setting` + sanitize callback اختصاصی.
-2. فیلدها در قالب از طریق `config('settings.*')` یا helper خوانده می‌شوند؛ بدون `get_option` پراکنده در view.
-3. فوتر کپی‌رایت: فیلد `theme_footer_credit` پیش‌فرضش متن اجباری آمل نوین است؛ خالی‌کردنش یا حذفش مجاز نیست.
-4. تب «بروزرسانی» وضعیت patch را نشان می‌دهد و دکمه‌ی apply را فقط به administrator می‌دهد.
+1. **یک option واحد** `{slug}_theme_options` + **schema به‌عنوان تنها منبع حقیقت** (`settings_schema()`)؛ همه‌ی فیلدها با `register_setting` + sanitize callback تایپ‌به‌تایپ.
+2. فیلدها در قالب از طریق helper (خواندن از همان option ادغام‌شده با defaults) می‌آیند؛ بدون `get_option` پراکنده در view.
+3. **خالی گذاشتن فیلد = پیش‌فرض/محتوای فعلی** — هرگز حذف محتوا.
+4. فوتر کپی‌رایت: فیلد `theme_footer_credit` پیش‌فرضش متن اجباری آمل نوین است؛ خالی‌کردنش یا حذفش مجاز نیست.
+5. تب «بروزرسانی» وضعیت patch را نشان می‌دهد و دکمه‌ی apply را فقط به administrator می‌دهد.
+6. **بعد از هر ذخیره/بازنشانی:** پاک‌سازی کش ویو با شمارهٔ نسخه + درخواست پاک‌سازی کش افزونه‌ها (جزئیات: `theme-settings-standard.md` §8).
 
 ### بروزرسانی قالب از طریق Patch (مال `PLUG`)
 ```
@@ -217,8 +234,9 @@ patches/
 └── 1.0.1-to-1.0.2/        ← فایل‌های patch (کپی تغییریافته‌ی فایل‌ها)
 ```
 - مکانیزم: درون‌برنامه‌ای — `UpdaterServiceProvider` فایل‌های مسیرشده در `manifest.json` را با تأیید `capability` + `nonce` و **پشتیبان گرفتن قبل از apply** جایگزین می‌کند.
-- هش `sha256` هر فایل قبل از جایگزینی تطبیق داده می‌شود؛ ناهماهنگی = توقف با پیام خطا.
+- هش `sha256` هر فایل قبل از جایگزینی تطبیق داده می‌شود؛ ناهماهنگی = توقف کامل با پیام خطا (هیچ فایلی نوشته نمی‌شود).
 - اعمال patch روی هاست بدون SSH و بدون Composer کار می‌کند.
+- **سقف‌ها و بازگشت (الگوی سایانا):** حجم پچ ≤ ۲۰MB، تعداد فایل ≤ ۴۰۰؛ staging در `uploads/{slug}-patches/`؛ لاگ اعمال + **دکمه‌ی rollback** به نسخهٔ قبل. پچ ترمیمی (فایل خراب از روی نسخهٔ سالم) هم پشتیبانی می‌شود.
 
 ---
 
@@ -255,12 +273,14 @@ HTML ≤ ۵۰KB | CSS ≤ ۳۰KB gzip | JS ≤ ۵۰KB gzip
 ## ۴) چک‌لیست پذیرش ساختار (توسط `ARCH` و `QA`)
 
 - [ ] بدون `composer.json` / `vendor/`
-- [ ] `functions.php` زیر ۱۰ خط و فقط bootstrap است
+- [ ] `functions.php` فقط گاردها + `require_once` (بدون تعریف تابع/کلاس؛ فقط هوک `admin_notices`)
 - [ ] درخت فایل‌ها با این سند یکی است
 - [ ] نام قالب = برند + «نوین» (نمایشی) و `{brand}-novin` (slug/text domain)
 - [ ] **موتور پردازش:** `app/Engine/` با Compiler + Container + Pipeline + Events و کش کامپایل فعال است
-- [ ] **پنل تنظیمات:** ۷ تب (هدر، فوتر، فروشگاه، صفحات، سئو، بهینه‌سازی، بروزرسانی) با Settings API و sanitize
-- [ ] **بروزرسانی patch:** `patches/manifest.json` + اعمال با هش/پشتیبان/nonce کار می‌کند
+- [ ] **پنل تنظیمات:** ۷ تب (هدر، فوتر، فروشگاه، صفحات، سئو، بهینه‌سازی، بروزرسانی) با Settings API،
+      یک option واحد، schemaمحور و «خالی = پیش‌فرض» — مطابق `theme-settings-standard.md`
+- [ ] **بروزرسانی patch:** `patches/manifest.json` + اعمال با هش/پشتیبان/nonce + staging و rollback کار می‌کند
+- [ ] **دروازه‌ی fatal:** `python3 scripts/validate_theme.py release/{slug}/` سبز است
 - [ ] **فونت IranSans:** `fonts.css` با swap، `--font-sans` از IRANSans، وزن‌های غیراستفاده حذف‌اند
 - [ ] **کپی‌رایت فوتر:** «مجموعه فناوری اطلاعات آمل نوین» + لینک amolnovin.ir در همه‌ی الگوها
 - [ ] هر view با موتور مینی-Blade کامپایل می‌شود (بدون خطا)

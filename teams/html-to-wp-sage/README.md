@@ -38,6 +38,10 @@
 | `agents/01-…-14-…` | پروفایل هر ۱۴ ایجنت + **System Prompt کپی‌شدنی** (انگلیسی) |
 | `standards/sage11-structure.md` | استاندارد ساختار قالب Sage 11 بدون Composer |
 | `standards/conversion-checklist.md` | جدول نگاشت اجباری HTML → وردپرس + چک‌لیست پذیرش CONVERT |
+| `standards/theme-settings-standard.md` | **استاندارد پنل تنظیمات** (schemaمحور، ۷ تب، ذخیره/بازنشانی/کش/پچ) — الگوبرداری از ۸ قالب واقعی |
+| `standards/fatal-error-prevention.md` | **پیشگیری از خطای Fatal**: گاردهای bootstrap، کش نسخه‌محور، دروازه‌ی QA |
+| `scripts/validate_theme.py` | **دروازهٔ اعتبارسنجی قالب** (php -l + ساختار + گاردها + patches) — قبل از PASS مرحله ۱۳ |
+| `knowledge/real-themes-survey.md` | تحلیل ساختار و پنل تنظیمات ۸ قالب واقعی آمل نوین (مبنای استانداردها) |
 | `templates/PROJECT_BRIEF.md` | فرم بریف پروژه (پر کن، بده به `TL`) |
 | `templates/CONVERSION_REPORT.md` | قالب گزارش تبدیل ۱:۱ |
 | `prompts/QUICKSTART.md` | دستورات راه‌انداز سریع |
