@@ -66,11 +66,15 @@ SOURCE BLOCK            → TARGET FILE                          → DYNAMIC DAT
 | درخواست کاربر | مسئول اصلی | پشتیبان |
 |---|---|---|
 | «این HTML را تبدیل کن» / بریف پروژه | TL | ARCH |
+| نام قالب (برند + «نوین») و slug/text domain | TL | ARCH |
 | ممیزی HTML، نقشه‌ی فایل‌ها، قرارداد تبدیل | ARCH | TL |
 | «رقبا را بررسی کن» / آنالیز سایت فارسی و خارجی حوزه | BENCH | SEO + UXR |
-| ساختار پوشه‌ها، autoloader، موتور قالب | SAGE | ARCH |
+| ساختار پوشه‌ها، autoloader، **موتور پردازش قوی** | SAGE | ARCH |
+| **پنل تنظیمات قالب** (هدر/فوتر/فروشگاه/صفحات/سئو/سرعت/بروزرسانی) | WP | PLUG |
+| **بروزرسانی قالب از طریق patch** | PLUG | WP |
 | تبدیل بخش‌ها به Blade، لوپ‌ها، فرم‌ها | CONV | SAGE + WP |
-| رنگ، فونت، چیدمان، ریسپانسیو، RTL | CSS | CONV |
+| **کپی‌رایت فوتر «مجموعه فناوری اطلاعات آمل نوین»** | CONV | WP |
+| رنگ، فونت، چیدمان، ریسپانسیو، RTL — **فونت IranSans** | CSS | MEDIA + PERF |
 | پک آیکون، تصاویر، بهینه‌سازی، media library | MEDIA | CSS + UXR |
 | منوی موبایل، آکاردئون، فرم AJAX، build | JS | WP |
 | بازبینی UI/UX، مشکلات تبدیل و تعامل، راه‌حل | UXR | BENCH + CSS |
@@ -91,10 +95,12 @@ SOURCE BLOCK            → TARGET FILE                          → DYNAMIC DAT
 **TL**
 - [ ] بریف و حوزه‌ی کاری تأیید و Decision Log به‌روز است
 - [ ] هر تحویل سربرگ Handoff دارد و چک‌لیست مرحله پر شده
+- [ ] نام قالب = **برند + «نوین»** (مثلاً «سایانا نوین») و slug/text domain مطابق `{brand}-novin` ثبت شده
 
 **ARCH**
 - [ ] هر بلوک HTML منبع در قرارداد جا دارد (بدون جاافتادگی)
 - [ ] ساختار فایل‌ها با `standards/sage11-structure.md` یکی است
+- [ ] نام قالب و کپی‌رایت فوتر در نقشه‌ی فایل‌ها لحاظ شده
 
 **BENCH**
 - [ ] ۵ تا ۱۰ رقیب فارسی **و** غیرفارسی با لینک و تاریخ بازدید ثبت شده
@@ -104,14 +110,17 @@ SOURCE BLOCK            → TARGET FILE                          → DYNAMIC DAT
 **SAGE**
 - [ ] بدون Composer و بدون vendor بالا می‌آید؛ `WP_DEBUG` صفر notice
 - [ ] `{{ }}` خروجی‌ها را escape می‌کند؛ `functions.php` فقط bootstrap است
+- [ ] **موتور پردازش قوی:** `app/Engine/` (Compiler + Container + Pipeline + Events) فعال با کش کامپایل و سربار warm ≤ 5ms
 
 **CONV**
 - [ ] جدول تبدیل ۱:۱ با قرارداد؛ هیچ متن/لینک استاتیکِ قابل‌ویرایش نمانده
 - [ ] یک `H1` در هر الگو؛ markup معنایی و فرم‌ها nonce‌دار
+- [ ] **کپی‌رایت فوتر:** «مجموعه فناوری اطلاعات آمل نوین» + لینک `amolnovin.ir` در همه‌ی الگوها
 
 **CSS**
 - [ ] بدون hex پراکنده؛ ۳۶۰/۷۶۸/۱۴۴۰ بدون اسکرول افقی؛ RTL با logical properties
 - [ ] کنتراست ≥ 4.5:1؛ focus-visible و reduced-motion
+- [ ] **فونت IranSans** از `assets/fonts/iransans/` با `font-display: swap` و `--font-sans`
 
 **JS**
 - [ ] بدون jQuery؛ همه‌ی اسکریپت‌ها defer/module؛ صفر خطای کنسول
@@ -120,6 +129,7 @@ SOURCE BLOCK            → TARGET FILE                          → DYNAMIC DAT
 **WP**
 - [ ] صفر notice با `WP_DEBUG`؛ escape سه‌لایه؛ nonce + بررسی سمت سرور
 - [ ] منو، لوگو، ویجت، image sizes، textdomain ثبت شده
+- [ ] **پنل تنظیمات قالب:** ۷ تب (هدر، فوتر، کنترل فروشگاه، صفحات، سئو، بهینه‌سازی و سرعت، بروزرسانی) با Settings API و sanitize — و کپی‌رایت فوتر پیش‌فرض «مجموعه فناوری اطلاعات آمل نوین»
 
 **MEDIA**
 - [ ] پک آیکون یکدست است (گرید ۲۴، stroke، currentColor، sprite + RTL-safe)
@@ -135,6 +145,7 @@ SOURCE BLOCK            → TARGET FILE                          → DYNAMIC DAT
 - [ ] هر افزونه با ABSPATH guard، nonce، sanitize/escape و uninstall تمیز
 - [ ] محتوای کارفرما با عوض شدن قالب حفظ می‌شود (CPT در افزونه)
 - [ ] API عمومی افزونه برای `CONV` مستند شده
+- [ ] **بروزرسانی patch:** `patches/manifest.json` + اعمال با تأیید هش sha256، پشتیبان قبل از apply و capability/nonce
 
 **SEO**
 - [ ] title/canonical درست؛ یک H1؛ alt واقعی؛ Schema حوزه بدون تداخل افزونه

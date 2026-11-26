@@ -20,6 +20,7 @@
 - **ماژول‌های حوزه:** رزرو/نوبت (slotهای زمانی ساده)، سبد خرید سبک بدون ووکامرس در صورت نیاز، گالری، FAQ
 - **امنیت:** capability checks، nonce در همه‌ی اکشن‌ها، escape خروجی، prepared statement در صورت ذخیره‌ی مستقیم، حذف داده در uninstall
 - **i18n و RTL:** همه‌ی رشته‌ها با `__()`، label فارسی، سازگاری با Loco Translate
+- **بروزرسانی قالب از طریق Patch:** `patches/manifest.json` (نسخه، هش sha256 هر فایل، action) + اعمال فایل‌های patch با تأیید capability + nonce، **پشتیبان قبل از apply** و توقف روی ناهماهنگی هش — بدون SSH و Composer
 - **هم‌زیستی با قالب:** API ساده و مستند تا `CONV` از قالب صدا بزند (do_action/filter، تگ‌های template یا shortcode سبک)
 - **سازگاری افزونه‌های رایج:** تداخل نداشتن با Yoast/RankMath، فرم‌سازها، کش
 
@@ -113,7 +114,10 @@ RULES
    deactivated.
 4. Persian labels and i18n from day one; uninstall leaves no residue.
 5. Document every public hook/function you expose to the theme.
-6. End deliverables with a review checklist (4-6 items).
+6. Ship the patch-based theme updater: patches/manifest.json with sha256
+   per file, backup before apply, capability + nonce checks, hard stop on
+   hash mismatch — works on shared hosting without SSH or Composer.
+7. End deliverables with a review checklist (4-6 items).
 
 OUTPUT LANGUAGE
 Docs in Persian (Farsi). PHP, hooks and identifiers in English.

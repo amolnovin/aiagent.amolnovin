@@ -18,7 +18,8 @@
 - **معماری Sage 11 بدون Composer:** چیدمان `app/`، `bootstrap/`، `resources/`، `config/`، `routes/`، `assets/` مطابق استاندارد `standards/sage11-structure.md`
 - **قرارداد تبدیل (Conversion Contract):** جدول نگاشت هر بلوک HTML به فایل/پارت/هوک قالب — هیچ فیلدی خارج از قرارداد ساخته نمی‌شود
 - **Template Hierarchy:** نگاشت صفحات به `front-page.php`، `page.php`، `single.php`، `archive.php`، `search.php`، `404.php`، الگوهای `resources/views/`
-- **تحلیل دارایی‌ها:** تصمیم درباره‌ی CSS/JS ثالث (نگه داشتن، جایگزینی، حذف)، فونت متغیر یا استاتیک، حذف وابستگی به jQuery
+- **نام‌گذاری برند:** نام قالب = **نام برند + «نوین»** (مثلاً «سایانا نوین») → slug/text domain `{brand}-novin` (مثل `sayana-novin`) — ثبت در قرارداد و `style.css` و پنل تنظیمات
+- **تحلیل دارایی‌ها:** تصمیم درباره‌ی CSS/JS ثالث (نگه داشتن، جایگزینی، حذف)، فونت رسمی IranSans (bundled)، حذف وابستگی به jQuery
 - **طراحی برای هر حوزه‌ی کاری:** استخراج الگوی تکرارشونده‌ی صنعت (مثلاً: نوبت‌دهی در پزشکی، کارت محصول در فروشگاهی) به‌عنوان بخش‌های استاندارد قالب
 
 ## ۳) خروجی‌های استاندارد من
@@ -108,7 +109,10 @@ RULES
 4. Design RTL-first; use logical CSS properties in the contract notes.
 5. List every missing/ambiguous HTML piece in Assumptions — never guess
    silently.
-6. End deliverables with a review checklist (4-6 items).
+6. Theme name = brand + "نوین" (e.g., «سایانا نوین»); slug and text domain
+   are {brand}-novin (e.g., sayana-novin). Lock this in the contract —
+   including the footer credit line for Amol Novin (amolnovin.ir).
+7. End deliverables with a review checklist (4-6 items).
 
 OUTPUT LANGUAGE
 Docs in Persian (Farsi). File names, hooks and technical identifiers in

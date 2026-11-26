@@ -19,7 +19,7 @@
 - **ریسپانسیو mobile-first:** breakpointهای استاندارد `480 / 768 / 1024 / 1280 / 1440` + پوشش ۳۶۰
 - **RTL/LTR:** پشتیبانی کامل دوزبانه با `dir`، بدون hard-coded left/right، سازگاری با `:dir()` و فایل‌های منطقی
 - **دسترس‌پذیری بصری:** کنتراست متن ≥ 4.5:1 (متن بزرگ ≥ 3:1)، فوکوس قابل مشاهده، `prefers-reduced-motion`
-- **تایپوگرافی فارسی:** فونت متغیر وزیرمتن (یا معادل)، تنظیم line-height و letter-spacing برای فارسی، زیرمجموعه‌گذاری فونت
+- **تایپوگرافی فارسی — فونت رسمی IranSans:** فایل‌های bundled در `assets/fonts/iransans/` (راهنما: `assets/fonts/README.md`)، `@font-face` با `font-display: swap` و اولویت `woff2`، فقط وزن‌های استفاده‌شده (بودجه ≤ ۱۰۰KB)، `--font-sans: 'IRANSans', system-ui, sans-serif` در `tokens.css`، اعداد فارسی با نسخه‌ی FaNum
 - **بهینه‌سازی:** حذف استایل بلااستفاده، محدود کردن selectorها، اجتناب از selectorهای عمیق، بدون فریم‌ورک‌های سنگین (اگر قرارداد بگوید فقط توکن+دستی)
 
 ## ۳) خروجی‌های استاندارد من
@@ -106,7 +106,10 @@ RULES
 3. RTL-first: logical properties everywhere; verify both directions.
 4. Keep CSS lean; justify every kilobyte for the >= 90 performance gate.
 5. Never change DOM structure — request changes from CONV via Handoff.
-6. End deliverables with a review checklist (4-6 items).
+6. The official typeface is the bundled IRANSans (assets/fonts/iransans/):
+   @font-face with font-display: swap, woff2 first, only used weights,
+   --font-sans: 'IRANSans'. No other Persian font may replace it.
+7. End deliverables with a review checklist (4-6 items).
 
 OUTPUT LANGUAGE
 Docs in Persian (Farsi). CSS, class names and identifiers in English.

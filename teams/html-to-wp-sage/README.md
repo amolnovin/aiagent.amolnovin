@@ -41,6 +41,7 @@
 | `templates/PROJECT_BRIEF.md` | فرم بریف پروژه (پر کن، بده به `TL`) |
 | `templates/CONVERSION_REPORT.md` | قالب گزارش تبدیل ۱:۱ |
 | `prompts/QUICKSTART.md` | دستورات راه‌انداز سریع |
+| `assets/fonts/iransans/` | فونت رسمی **IranSans** (bundled از گوگل درایو) + [`assets/fonts/README.md`](assets/fonts/README.md) راهنما |
 
 ---
 
@@ -97,12 +98,18 @@ SHIP  → قالب + plugins/ + docs/00..08 + استاندارد حوزه
 ## الزامات سخت (خط قرمز تیم)
 
 1. **بدون Composer:** هیچ `composer.json`/`vendor/` — قالب فقط با آپلود پوشه کار می‌کند (Sage 11 style، `package.json` فقط برای build دارایی‌ها).
-2. **Performance ≥ ۹۰:** Lighthouse موبایل **و** دسکتاپ؛ LCP ≤ 2.5s، INP ≤ 200ms، CLS ≤ 0.1 — با شاهد مکتوب در `docs/04-performance-report.md`.
-3. **سئوی حرفه‌ای:** متاتگ‌ها، Schema متناسب با حوزه، یک H1، alt واقعی، سئوی فارسی بدون stuffing.
-4. **ریسپانسیو:** 360 / 768 / 1024 / 1440 بدون اسکرول افقی + RTL-first با logical properties.
-5. **استاندارد هر حوزه:** هر پروژه یک `docs/06-domain-standard.md` تولید می‌کند تا نوبت بعدی همان حوزه از صفر شروع نشود.
-6. **امنیت:** nonce روی همه‌ی فرم‌ها + escape سه‌لایه + `ABSPATH` guard.
-7. **بدون قرارداد `ARCH` کدی نوشته نمی‌شود** و بدون PASS از `QA` چیزی تحویل داده نمی‌شود.
+2. **موتور پردازش قوی:** `app/Engine/` با Compiler (کش‌دار) + Container + Pipeline + Events — همه‌ی request از مسیر واحد موتور عبور می‌کند.
+3. **پنل تنظیمات قالب:** ۷ تب — **هدر، فوتر، کنترل فروشگاه، صفحات، سئو، بهینه‌سازی و سرعت، بروزرسانی (patch)** — با Settings API و sanitize.
+4. **بروزرسانی از طریق patch:** `patches/manifest.json` با تأیید هش sha256، پشتیبان قبل از apply، capability + nonce — بدون SSH و Composer.
+5. **فونت IranSans:** bundled در `assets/fonts/iransans/` (منبع: [گوگل درایو](https://drive.google.com/file/d/1cQ2MIU0TAorvxxEYVjrTsFK2H6SHiyE3/view)) — `font-display: swap` و `--font-sans: IRANSans`.
+6. **کپی‌رایت فوتر:** نمایش «مجموعه فناوری اطلاعات آمل نوین» با لینک [amolnovin.ir](https://amolnovin.ir) در همه‌ی قالب‌ها (پیش‌فرض غیرقابل حذف).
+7. **نام قالب = برند + «نوین»:** مثلاً «سایانا نوین» → slug/text domain: `sayana-novin`.
+8. **Performance ≥ ۹۰:** Lighthouse موبایل **و** دسکتاپ؛ LCP ≤ 2.5s، INP ≤ 200ms، CLS ≤ 0.1 — با شاهد مکتوب در `docs/04-performance-report.md`.
+9. **سئوی حرفه‌ای:** متاتگ‌ها، Schema متناسب با حوزه، یک H1، alt واقعی، سئوی فارسی بدون stuffing.
+10. **ریسپانسیو:** 360 / 768 / 1024 / 1440 بدون اسکرول افقی + RTL-first با logical properties.
+11. **استاندارد هر حوزه:** هر پروژه یک `docs/06-domain-standard.md` تولید می‌کند تا نوبت بعدی همان حوزه از صفر شروع نشود.
+12. **امنیت:** nonce روی همه‌ی فرم‌ها + escape سه‌لایه + `ABSPATH` guard.
+13. **بدون قرارداد `ARCH` کدی نوشته نمی‌شود** و بدون PASS از `QA` چیزی تحویل داده نمی‌شود.
 
 ---
 
