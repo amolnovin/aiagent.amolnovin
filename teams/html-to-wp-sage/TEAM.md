@@ -20,7 +20,7 @@
 ۱۰. EXTEND        PLUG      : افزونه‌های داخلی پروژه (فرم‌ها، CPTها، ماژول‌های حوزه)
 ۱۱. OPTIMIZE-SEO  SEO       : متاتگ‌ها، Schema حوزه، سلسله‌مراتب عنوان، سئوی فارسی
 ۱۲. OPTIMIZE-PERF PERF      : بودجه عملکرد، تصویر/فونت/JS/CSS، اثبات ≥ ۹۰
-۱۳. VERIFY        QA        : تست، خطایابی، رگرسیون با منبع، دروازه‌ی انتشار
+۱۳. VERIFY        QA        : validate_theme (دروازهٔ fatal) + تست، خطایابی، رگرسیون با منبع، دروازه‌ی انتشار
 ۱۴. SHIP          TL + QA   : بسته‌ی نهایی + docs + استاندارد قابل‌استفاده‌ی مجدد حوزه
 ```
 
@@ -109,8 +109,9 @@ SOURCE BLOCK            → TARGET FILE                          → DYNAMIC DAT
 
 **SAGE**
 - [ ] بدون Composer و بدون vendor بالا می‌آید؛ `WP_DEBUG` صفر notice
-- [ ] `{{ }}` خروجی‌ها را escape می‌کند؛ `functions.php` فقط bootstrap است
+- [ ] `{{ }}` خروجی‌ها را escape می‌کند؛ `functions.php` فقط bootstrap است (گارد نسخهٔ PHP + `is_file` + `require_once`)
 - [ ] **موتور پردازش قوی:** `app/Engine/` (Compiler + Container + Pipeline + Events) فعال با کش کامپایل و سربار warm ≤ 5ms
+- [ ] **پیشگیری fatal:** مطابق `standards/fatal-error-prevention.md` (گاردها + کش نسخه‌محور)؛ `python3 scripts/validate_theme.py` قرمز نیست
 
 **CONV**
 - [ ] جدول تبدیل ۱:۱ با قرارداد؛ هیچ متن/لینک استاتیکِ قابل‌ویرایش نمانده
@@ -130,6 +131,7 @@ SOURCE BLOCK            → TARGET FILE                          → DYNAMIC DAT
 - [ ] صفر notice با `WP_DEBUG`؛ escape سه‌لایه؛ nonce + بررسی سمت سرور
 - [ ] منو، لوگو، ویجت، image sizes، textdomain ثبت شده
 - [ ] **پنل تنظیمات قالب:** ۷ تب (هدر، فوتر، کنترل فروشگاه، صفحات، سئو، بهینه‌سازی و سرعت، بروزرسانی) با Settings API و sanitize — و کپی‌رایت فوتر پیش‌فرض «مجموعه فناوری اطلاعات آمل نوین»
+- [ ] **مطابق `standards/theme-settings-standard.md`:** یک option واحد + `settings_schema()` + «خالی = پیش‌فرض» + بازنشانی با confirm + پاک‌سازی کش با شمارهٔ نسخه بعد از ذخیره
 
 **MEDIA**
 - [ ] پک آیکون یکدست است (گرید ۲۴، stroke، currentColor، sprite + RTL-safe)
@@ -156,8 +158,10 @@ SOURCE BLOCK            → TARGET FILE                          → DYNAMIC DAT
 - [ ] LCP ≤ 2.5s | INP ≤ 200ms | CLS ≤ 0.1 | فونت فارسی subset
 
 **QA**
+- [ ] **دروازه‌ی fatal:** `python3 scripts/validate_theme.py release/{slug}/` سبز است (صفر FAIL) + صفر خطای `php -l` (یا بررسی جایگزین + تعهد lint روی میزبان دارای PHP)
 - [ ] ماتریس تست کامل (ریسپانسیو، RTL/LTR، کیبورد، فرم‌ها، امنیت)
 - [ ] رگرسیون بلوک‌به‌بلوک با HTML منبع؛ گزارش با PASS/FAIL
+- [ ] **تست پنل:** ذخیره/بازنشانی/درون‌ریزی + «خالی = پیش‌فرض» + تست با کاربر غیرمدیر (رد دسترسی) + پاک‌سازی کش بعد از ذخیره
 
 ---
 

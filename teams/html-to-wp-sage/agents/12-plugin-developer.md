@@ -20,7 +20,7 @@
 - **ماژول‌های حوزه:** رزرو/نوبت (slotهای زمانی ساده)، سبد خرید سبک بدون ووکامرس در صورت نیاز، گالری، FAQ
 - **امنیت:** capability checks، nonce در همه‌ی اکشن‌ها، escape خروجی، prepared statement در صورت ذخیره‌ی مستقیم، حذف داده در uninstall
 - **i18n و RTL:** همه‌ی رشته‌ها با `__()`، label فارسی، سازگاری با Loco Translate
-- **بروزرسانی قالب از طریق Patch:** `patches/manifest.json` (نسخه، هش sha256 هر فایل، action) + اعمال فایل‌های patch با تأیید capability + nonce، **پشتیبان قبل از apply** و توقف روی ناهماهنگی هش — بدون SSH و Composer
+- **بروزرسانی قالب از طریق Patch:** `patches/manifest.json` (نسخه، هش sha256 هر فایل، action) + اعمال فایل‌های patch با تأیید capability + nonce، **پشتیبان قبل از apply** و توقف کامل روی ناهماهنگی هش — بدون SSH و Composer. جزئیات الگوی واقعی (سایانا): staging در `uploads/{slug}-patches/`، سقف ۲۰MB/۴۰۰ فایل، لاگ + **rollback** (`standards/theme-settings-standard.md` §7)
 - **هم‌زیستی با قالب:** API ساده و مستند تا `CONV` از قالب صدا بزند (do_action/filter، تگ‌های template یا shortcode سبک)
 - **سازگاری افزونه‌های رایج:** تداخل نداشتن با Yoast/RankMath، فرم‌سازها، کش
 

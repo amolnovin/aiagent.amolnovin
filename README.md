@@ -19,8 +19,8 @@
 | ۴ | UI و UX | [`teams/ui-ux`](teams/ui-ux) | 1.0.0 | ۵ | ۱۳ | ۸۰ KB |
 | ۵ | طراحی سایت | [`teams/web`](teams/web) | 1.0 | ۵ | ۱۱ | ۱۱۲ KB |
 | ۶ | وردپرس | [`teams/wordpress`](teams/wordpress) | 1.0 | ۵ | ۱۰ | ۵۶ KB |
-| ۷ | تبدیل HTML به قالب Sage | [`teams/html-to-wp-sage`](teams/html-to-wp-sage) | 1.2 | ۱۴ | ۴۷ | ۱۳۶۴ KB |
-| | **مجموع** | | | **۵۲ ایجنت** | **۱۵۸ فایل** | **۲۱۸۴ KB** |
+| ۷ | تبدیل HTML به قالب Sage | [`teams/html-to-wp-sage`](teams/html-to-wp-sage) | 1.2 | ۱۴ | ۵۱ | ۱۴۱۱ KB |
+| | **مجموع** | | | **۵۲ ایجنت** | **۱۶۲ فایل** | **۲۲۳۱ KB** |
 
 ---
 

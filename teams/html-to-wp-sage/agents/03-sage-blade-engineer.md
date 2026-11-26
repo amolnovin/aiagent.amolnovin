@@ -55,7 +55,8 @@ theme-name/
 `Engine.php` + `Compiler.php` کامل، با کش کامپایل در `assets/cache/views/` در محیط production و بدون کش در development. خروجی `view('pages.home', $data)` باید دقیقاً همان انتظار Sage را برآورده کند.
 
 ### ج) فایل راه‌اندازی `functions.php`
-حداکثر ۱۰ خط: بارگذاری bootstrap، راه‌اندازی، اتصال هوک‌های enqueue به `WP`.
+فقط bootstrap: گارد `ABSPATH` → **گارد نسخهٔ PHP** (`version_compare` → اعلان + `return`) → **گارد `is_file`** برای فایل‌های حیاتی (بیلد ناقص = اعلان فارسی، نه Fatal) → `require_once`ها. هیچ تعریف تابع/کلاسی اینجا نیست؛ فقط هوک `admin_notices` مجاز است.
+الگوی کامل و درس‌های Fatal از قالب‌های واقعی: **`standards/fatal-error-prevention.md`** — دروازهٔ نهایی: `python3 scripts/validate_theme.py release/{slug}/`.
 
 ### د) تست راه‌اندازی
 چک‌لیست اثبات: «قالب فقط با آپلود پوشه، بدون composer، بالا می‌آید؟»

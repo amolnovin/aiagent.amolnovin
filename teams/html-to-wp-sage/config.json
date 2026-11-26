@@ -8,19 +8,25 @@
   "hard_requirements": {
     "framework": "Sage 11 style architecture without Composer (no composer.json, no vendor/)",
     "engine": "strong processing engine in app/Engine/: Compiler (cached) + Container + Pipeline + Events; warm-cache compile overhead <= 5ms",
-    "settings_panel": "Theme Settings page with 7 tabs: header, footer, store control, pages, seo, performance/speed, updates (patch)",
-    "theme_updates": "patch-based update via patches/manifest.json (sha256 verify, backup before apply, capability+nonce)",
+    "settings_panel": "Theme Settings page with 7 tabs: header, footer, store control, pages, seo, performance/speed, updates (patch) — implemented per standards/theme-settings-standard.md (single option key, schema as single source of truth, empty = default)",
+    "theme_updates": "patch-based update via patches/manifest.json (sha256 verify, backup before apply, capability+nonce, staging in uploads/, log + rollback, max 20MB / 400 files)",
     "font": "IRANSans (bundled at assets/fonts/iransans/, source: Google Drive IRANSans(FaNum).zip), font-display: swap, --font-sans: IRANSans",
     "footer_credit": "footer must show 'مجموعه فناوری اطلاعات آمل نوین' linking to https://amolnovin.ir (non-removable default)",
     "naming": "theme name = brand + 'نوین' (e.g. سایانا نوین); slug/text domain = {brand}-novin",
     "performance": "Lighthouse >= 90 (mobile and desktop), LCP <= 2.5s, INP <= 200ms, CLS <= 0.1",
     "seo": "professional: meta map, domain Schema.org, heading hierarchy, Persian SEO",
-    "responsive": "360 / 768 / 1024 / 1440 px, RTL-first, WCAG 2.2 AA"
+    "responsive": "360 / 768 / 1024 / 1440 px, RTL-first, WCAG 2.2 AA",
+    "settings_standard": "standards/theme-settings-standard.md is binding: one option key ({slug}_theme_options), settings_schema() as single source of truth, sanitize per type on save + escape on output, empty field = default/current content, reset with nonce+confirm (panel option only), cache flush (view cache by version + plugin caches) after every save",
+    "zero_fatal": "zero fatal errors: functions.php = guards only (PHP version + is_file + require_once, admin_notices allowed); every PHP file has ABSPATH guard; no global function/class redeclaration; gated requires for plugin-dependent code; view cache invalidated by theme version; gate = python3 scripts/validate_theme.py release/{slug}/ must exit 0"
   },
   "shared_knowledge": [
     "TEAM.md",
     "standards/sage11-structure.md",
-    "standards/conversion-checklist.md"
+    "standards/conversion-checklist.md",
+    "standards/theme-settings-standard.md",
+    "standards/fatal-error-prevention.md",
+    "scripts/validate_theme.py",
+    "knowledge/real-themes-survey.md"
   ],
   "templates": [
     "templates/PROJECT_BRIEF.md",
