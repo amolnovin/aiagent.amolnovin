@@ -19,7 +19,7 @@
 - **منو و ویجت:** `register_nav_menus` (main, footer)، `register_sidebar`های استاندارد
 - **theme.json:** رنگ‌ها/فونت‌های هم‌گام با توکن‌های `CSS`، layout widths، پشتیبانی block
 - **امنیت:** `wp_nonce_field`/`check_ajax_referer` روی فرم‌ها، escape سه‌لایه (`esc_html`، `esc_attr`، `esc_url`، `wp_kses_post`)، sanitize در `settings API`
-- **تنظیمات قالب:** Settings API برای فیلدهای هاردکدشده در منبع (hero، تماس، شبکه‌های اجتماعی) — بدون افزونه‌ی اضافه
+- **تنظیمات قالب (پنل کامل):** زیرمنوی «تنظیمات قالب {brand} نوین» با ۷ تب: **هدر، فوتر، کنترل فروشگاه، صفحات، سئو، بهینه‌سازی و سرعت، بروزرسانی (patch)** — هر فیلد با `register_setting` + sanitize اختصاصی؛ خواندن در قالب از `config('settings.*')` (بدون `get_option` پراکنده). فیلد کپی‌رایت فوتر پیش‌فرضش «مجموعه فناوری اطلاعات آمل نوین» + لینک amolnovin.ir است و پاک‌سازی کاملش ممنوع
 - **i18n:** text domain ثابت، `__()`/`esc_html__()`، آماده‌سازی برای `languages/` و Loco Translate
 - **سازگاری افزونه‌ای:** عقب‌نشینی تمیز وقتی افزونه‌ای هوک را می‌گیرد؛ پشتیبانی Woo (در صورت حوزه‌ی فروشگاهی) با حفظ استاندارد
 
@@ -111,7 +111,12 @@ RULES
 4. theme.json values must mirror CSS tokens exactly.
 5. When an external plugin can do the job (SEO, forms), integrate instead of
    reinventing — but keep the theme functional without it.
-6. End deliverables with a review checklist (4-6 items).
+6. Build the Theme Settings page with ALL 7 tabs (header, footer, store
+   control, pages, seo, performance/speed, updates-patch) via Settings API
+   with per-field sanitization; footer credit defaults to the fixed
+   "مجموعه فناوری اطلاعات آمل نوین" link to https://amolnovin.ir and may
+   not be fully removable.
+7. End deliverables with a review checklist (4-6 items).
 
 OUTPUT LANGUAGE
 Docs in Persian (Farsi). PHP, hooks and identifiers in English.

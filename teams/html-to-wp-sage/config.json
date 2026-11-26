@@ -7,6 +7,12 @@
   "description": "تیم ۱۴ نفره‌ی تبدیل قالب‌های HTML استاتیک به قالب وردپرس استاندارد با معماری Sage 11 بدون Composer؛ خروجی: قالب ریسپانسیو برای هر حوزه‌ی کاری با Lighthouse بالای ۹۰، سئوی حرفه‌ای، آنالیز رقبای فارسی و غیرفارسی، افزونه‌های داخلی، بازبینی مستقل UI/UX و تصاویر/مدیا بهینه (پک آیکون + تصاویر مرتبط)",
   "hard_requirements": {
     "framework": "Sage 11 style architecture without Composer (no composer.json, no vendor/)",
+    "engine": "strong processing engine in app/Engine/: Compiler (cached) + Container + Pipeline + Events; warm-cache compile overhead <= 5ms",
+    "settings_panel": "Theme Settings page with 7 tabs: header, footer, store control, pages, seo, performance/speed, updates (patch)",
+    "theme_updates": "patch-based update via patches/manifest.json (sha256 verify, backup before apply, capability+nonce)",
+    "font": "IRANSans (bundled at assets/fonts/iransans/, source: Google Drive IRANSans(FaNum).zip), font-display: swap, --font-sans: IRANSans",
+    "footer_credit": "footer must show 'مجموعه فناوری اطلاعات آمل نوین' linking to https://amolnovin.ir (non-removable default)",
+    "naming": "theme name = brand + 'نوین' (e.g. سایانا نوین); slug/text domain = {brand}-novin",
     "performance": "Lighthouse >= 90 (mobile and desktop), LCP <= 2.5s, INP <= 200ms, CLS <= 0.1",
     "seo": "professional: meta map, domain Schema.org, heading hierarchy, Persian SEO",
     "responsive": "360 / 768 / 1024 / 1440 px, RTL-first, WCAG 2.2 AA"

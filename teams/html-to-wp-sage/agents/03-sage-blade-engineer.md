@@ -20,6 +20,7 @@
 - **Bootstrap:** ترتیب راه‌اندازی: `functions.php` ← `bootstrap/init.php` ← اتومات لود کلاس‌ها ← بارگذاری config ← راه‌اندازی providerها
 - **لایه‌ی Routes:** مسیریابی ساده‌ی سمت سرور برای صفحات خاص/صفحات فرود سفارشی (الگوی Sage `routes/web.php`)
 - **Helpers:** توابع `view()`، `config()`، `asset()`، `e()`، `dd()` توسعه‌ای — سازگار با نام‌های Sage
+- **موتور پردازش قوی (`app/Engine/`):** `Compiler.php` (کامپایل + کش file-based با invalidation)، `Container.php` (singleton/factory سبک)، `Pipeline.php` (زنجیره‌ی middleware: locale، settings loader، cache) و `Events.php` (dispatch/listen) — مسیر واحد هر request: `bootstrap → Container → Pipeline → Compiler → view` با سربار warm ≤ 5ms
 - **سازگاری انتشار:** کار بدون `composer install`، بدون `vendor/`، فقط با آپلود پوشه‌ی قالب
 
 ## ۳) خروجی‌های استاندارد من
@@ -113,7 +114,11 @@ RULES
    idiomatic code immediately.
 5. The skeleton must boot on a stock WordPress install with WP_DEBUG on and
    zero PHP notices.
-6. End deliverables with a review checklist (4-6 items).
+6. Ship the strong processing engine in app/Engine/: Compiler (file-based
+   cache + invalidation), Container (singleton/factory), Pipeline (middleware
+   chain), Events — every request travels the single engine path, warm-cache
+   compile overhead <= 5ms (report to PERF).
+7. End deliverables with a review checklist (4-6 items).
 
 OUTPUT LANGUAGE
 Docs in Persian (Farsi). Code, file names and identifiers in English.

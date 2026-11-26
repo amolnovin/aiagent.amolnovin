@@ -4,11 +4,36 @@
 
 ---
 
+## ۰) الزامات ثابت برند (همه‌ی قالب‌ها)
+
+### الف) نام قالب = نام برند + «نوین»
+```
+سایانا نوین        → slug: sayana-novin        → text domain: sayana-novin
+کلینیک رادین نوین  → slug: radin-novin          → text domain: radin-novin
+```
+- نام نمایشی در `style.css`، نام پنل تنظیمات، title و text domain همگی از همین قاعده پیروی می‌کنند.
+- انتخاب نام برند با `TL` (بریف) و ثبت slug با `ARCH` انجام می‌شود.
+
+### ب) کپی‌رایت فوتر (اجباری — حذف‌نشدنی)
+در همه‌ی قالب‌ها، ردیف زیر در فوتر نمایش داده می‌شود (قابل تغییر رنگ/استایل، ولی متن و لینک ثابت):
+```html
+طراحی و توسعه: <a href="https://amolnovin.ir" rel="nofollow noopener">مجموعه فناوری اطلاعات آمل نوین</a>
+```
+- متن فارسی دقیق: **«مجموعه فناوری اطلاعات آمل نوین»** — لینک به `https://amolnovin.ir`.
+- از `get_theme_mod('footer_credit')` خوانده می‌شود ولی **پیش‌فرض همین متن است** و پاک‌سازی کامل آن ممنوع است.
+
+### ج) فونت رسمی: IranSans
+- فونت bundled در `assets/fonts/iransans/` (نگاه کن به `assets/fonts/README.md`) — منبع: گوگل درایو تیم.
+- `@font-face` با `font-display: swap`، اولویت `woff2`، وزن‌های استفاده‌شده فقط.
+- `--font-sans: 'IRANSans', ...` در `tokens.css`؛ عدد فارسی با نسخه‌ی FaNum.
+
+---
+
 ## ۱) درخت فایل‌های استاندارد
 
 ```
-theme-name/
-├── style.css                    ← فقط متادیتای وردپرس (Name, Version, Requires, Text Domain)
+{brand}-novin/                  ← نام فولدر = slug برند + novin (مثلا sayana-novin)
+├── style.css                    ← فقط متادیتای وردپرس (Name: {brand} نوین, Version, Text Domain)
 ├── functions.php                ← فقط: defined('ABSPATH') + require bootstrap/init.php (زیر ۱۰ خط)
 ├── theme.json                   ← رنگ/فونت/layout هم‌گام با tokens.css
 ├── index.php                    ← fallback وردپرس (اجباری)
@@ -21,17 +46,32 @@ theme-name/
 │
 ├── app/
 │   ├── helpers.php              ← view(), config(), asset(), e(), dd()
-│   ├── View/
-│   │   ├── Engine.php           ← موتور مینی-Blade (بلوک‌های @extends/@section/@include/@foreach/@if)
-│   │   └── Compiler.php         ← کامپایل به PHP + کش در assets/cache/views/
-│   ├── Providers/               ← ThemeServiceProvider, AssetServiceProvider, SeoServiceProvider...
+│   ├── Engine/                  ← ★ موتور پردازش قوی قالب (بخش ۲)
+│   │   ├── Compiler.php         ← کامپایل templateها با cache
+│   │   ├── Container.php        ← سرویس‌های سبک (singleton/factory)
+│   │   └── Pipeline.php         ← زنجیره‌ی middleware پردازش request/response
+│   ├── View/Engine.php          ← لایه‌ی نمای موتور (بلوک‌های Blade)
+│   ├── Providers/               ← ThemeServiceProvider, SettingsServiceProvider,
+│   │                               AssetServiceProvider, SeoServiceProvider, UpdaterServiceProvider
 │   ├── Support/                 ← کلاس‌های سبک (بدون illuminate — بازنویسی ساده)
 │   └── Controllers/             ← کنترلرهای سبک صفحات (اختیاری)
 │
 ├── config/                      ← آرایه‌های PHP، بدون .env
-│   ├── theme.php                ← textdomain، image sizes، منوها
+│   ├── theme.php                ← نام قالب، textdomain، image sizes، منوها، footer credit
 │   ├── assets.php               ← entryها، نسخه‌سازی، no-build
-│   └── seo.php                  ← قالب متا، Schema پیش‌فرض حوزه
+│   ├── seo.php                  ← قالب متا، Schema پیش‌فرض حوزه
+│   └── settings.php             ← بخش‌های پنل تنظیمات (بخش ۳)
+│
+├── inc/
+│   └── settings/                ← ★ پنل تنظیمات قالب (بخش ۳)
+│       ├── class-settings-page.php    ← منوی پنل + تب‌ها
+│       ├── sections/header.php
+│       ├── sections/footer.php        ← شامل کپی‌رایت آمل نوین
+│       ├── sections/store.php         ← کنترل فروشگاه (در صورت حوزه)
+│       ├── sections/pages.php
+│       ├── sections/seo.php
+│       ├── sections/performance.php   ← بهینه‌سازی و سرعت
+│       └── sections/updates.php       ← بروزرسانی قالب از طریق patch
 │
 ├── routes/
 │   └── web.php                  ← مسیریابی ساده‌ی صفحات سفارشی
@@ -42,12 +82,13 @@ theme-name/
 │   │   │   ├── app.blade.php    ← اسکلت کلی (head, body, wp_head, wp_footer)
 │   │   │   └── partials/        ← head.blade.php
 │   │   ├── pages/               ← front-page, page, single, archive, search, 404
-│   │   ├── partials/            ← nav, footer, hero, cta, breadcrumbs
+│   │   ├── partials/            ← nav, footer (با کپی‌رایت)، hero, cta, breadcrumbs
 │   │   │   ├── blocks/          ← بخش‌های قابل استفاده (services, testimonials, faq...)
 │   │   │   └── forms/           ← contact, booking, newsletter (nonce‌دار)
 │   │   └── components/          ← card, badge, button, section-title...
 │   ├── styles/
-│   │   ├── tokens.css           ← متغیرها (رنگ، فونت، فاصله) — تنها منبع مقادیر
+│   │   ├── fonts.css            ← @font-face اجباری IranSans (swap + woff2 اول)
+│   │   ├── tokens.css           ← متغیرها (رنگ، فونت=IRANSans، فاصله) — تنها منبع مقادیر
 │   │   ├── base.css             ← reset + عناصر پایه (RTL-safe)
 │   │   ├── layout.css           ← ساختار + breakpointها
 │   │   ├── components.css
@@ -60,12 +101,16 @@ theme-name/
 ├── assets/                      ← خروجی build — قابل commit (میزبان بدون Node هم کار می‌کند)
 │   ├── build/                   ← main.[hash].js / main.[hash].css + manifest.json
 │   ├── js/                      ← نسخه‌ی no-build (fallback)
-│   ├── fonts/                   ← فونت subset‌شده فارسی
+│   ├── fonts/
+│   │   └── iransans/            ← فونت رسمی bundled (نگاه کن assets/fonts/README.md)
 │   └── images/
 │
-├── languages/                   ← theme-name-fa_IR.po / .mo
+├── patches/                     ← ★ فایل‌های بروزرسانی patch قالب
+│   └── manifest.json            ← نسخه‌ها، هش فایل‌ها، دستور apply
+│
+├── languages/                   ← {slug}-fa_IR.po / .mo
 ├── vendor-free notes:            ← هیچ composer.json، vendor/ یا package manager سمت PHP مجاز نیست
-├── docs/                        ← ۶ فایل تحویل (به TEAM.md §7)
+├── docs/                        ← ۸ فایل تحویل (به TEAM.md §7)
 │
 ├── package.json                 ← فقط برای build دارایی‌ها (npm: vite ...) — اجباری نیست روی میزبان
 ├── vite.config.js
@@ -121,6 +166,80 @@ require get_template_directory() . '/bootstrap/init.php';
 
 ---
 
+## ۲-ب) موتور پردازش قوی قالب (مال `SAGE`)
+
+قالب باید یک **موتور پردازش (Processing Engine)** قوی داشته باشد — نه صرفاً چند تابع کمکی. حداقل اجزا:
+
+```
+app/Engine/
+├── Compiler.php     ← کامپایل templateها: parse → PHP + کش file-based با invalidation هش/فایل‌زمان
+│                      خطاهای کامپایل با پیام فایل/خطی و fallback به نسخه‌ی قبلی در production
+├── Container.php    ← کانتینر سرویس: singleton(), factory(), bind() با lazy-loading
+│                      ثبت سرویس‌ها در providers و واکشی در هنگام نیاز (بدون new پراکنده)
+├── Pipeline.php     ← زنجیره‌ی middleware پردازش: request → [middleware...] → response
+│                      middlewareهای نمونه: locale/RTL، settings loader، SEO headers، cache view
+└── Events.php       ← dispatch/listen سبک (جایگزین do_action سطح بالا داخل قالب)
+```
+
+**قواعد موتور:**
+1. هر request از یک مسیر واحد عبور می‌کند: `bootstrap → Container → Pipeline → Compiler → view`.
+2. کامپایل‌ها در production کش می‌شوند؛ در `WP_DEBUG` بدون کش + پیام خطای شفاف.
+3. هیچ منطق پردازشی در `functions.php` یا داخل viewها نیست — فقط فراخوانی موتور.
+4. خروجی `view('pages.x', $data)` همیشه از موتور رد می‌شود (بدون echo دستی).
+5. عملکرد موتور اندازه‌گیری می‌شود: سربار کامپایل ≤ ۵ms در warm cache (گزارش به `PERF`).
+
+---
+
+## ۲-ج) پنل تنظیمات قالب (مال `WP` + `PLUG`)
+
+هر قالب یک **تنظیمات قالب (Theme Settings)** در پیشخوان وردپرس دارد — زیرمنوی «تنظیمات قالب {brand} نوین» با تب‌های زیر (ساختار: `inc/settings/` + Settings API):
+
+| تب | کلید option | محتوا |
+|---|---|---|
+| **هدر** | `theme_header_*` | لوگو/ارتفاع/چسبندگی، منو، نوار اطلاعیه، CTA سربرگ |
+| **فوتر** | `theme_footer_*` | ستون‌ها، شبکه‌های اجتماعی، **کپی‌رایت آمل نوین (غیرقابل حذف)** |
+| **کنترل فروشگاه** | `theme_store_*` | (در حوزه‌ی فروشگاهی) نمایش محصولات، سبد، بنر فروش، وضعیت ووکامرس |
+| **صفحات** | `theme_pages_*` | انتخاب صفحه‌ی خانه/تماس/خدمات، متن‌های hero، CTAهای ثابت |
+| **سئو** | `theme_seo_*` | عنوان/توضیح پیش‌فرض، Schema فعال، ربات‌ها، اتصال به افزونه‌ی سئو |
+| **بهینه‌سازی و سرعت** | `theme_perf_*` | lazy images، critical CSS، حذف اموجی/رداکشن، وضعیت کش، نمایش معیارها |
+| **بروزرسانی** | `theme_updates_*` | نسخه‌ی فعلی، **بروزرسانی از طریق patch** (بخش زیر) |
+
+**قواعد پنل:**
+1. همه‌ی فیلدها با `register_setting` + sanitize callback اختصاصی.
+2. فیلدها در قالب از طریق `config('settings.*')` یا helper خوانده می‌شوند؛ بدون `get_option` پراکنده در view.
+3. فوتر کپی‌رایت: فیلد `theme_footer_credit` پیش‌فرضش متن اجباری آمل نوین است؛ خالی‌کردنش یا حذفش مجاز نیست.
+4. تب «بروزرسانی» وضعیت patch را نشان می‌دهد و دکمه‌ی apply را فقط به administrator می‌دهد.
+
+### بروزرسانی قالب از طریق Patch (مال `PLUG`)
+```
+patches/
+├── manifest.json          ← { version, files: [{path, sha256, action: replace|add|delete}], min_theme_version }
+└── 1.0.1-to-1.0.2/        ← فایل‌های patch (کپی تغییریافته‌ی فایل‌ها)
+```
+- مکانیزم: درون‌برنامه‌ای — `UpdaterServiceProvider` فایل‌های مسیرشده در `manifest.json` را با تأیید `capability` + `nonce` و **پشتیبان گرفتن قبل از apply** جایگزین می‌کند.
+- هش `sha256` هر فایل قبل از جایگزینی تطبیق داده می‌شود؛ ناهماهنگی = توقف با پیام خطا.
+- اعمال patch روی هاست بدون SSH و بدون Composer کار می‌کند.
+
+---
+
+## ۲-د) فونت رسمی IranSans
+
+- فایل‌ها bundled: `assets/fonts/iransans/` (راهنما: `assets/fonts/README.md`؛ منبع: گوگل درایو تیم).
+- اجباری در `resources/styles/fonts.css`:
+```css
+@font-face {
+  font-family: 'IRANSans';
+  src: url('../assets/fonts/iransans/woff2/IRANSansWeb(FaNum).woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+/* وزن‌های مورد استفاده: Light(300) Medium(500) Bold(700) — فقط لیست شده‌ها */
+```
+- `--font-sans: 'IRANSans', system-ui, sans-serif;` در `tokens.css`.
+- preload زیرمجموعه‌ی فارسی + حذف وزن‌های بلااستفاده = رعایت بودجه‌ی فونت (≤ ۱۰۰KB).
+- اعداد فارسی با نسخه‌ی FaNum همین فونت نمایش داده می‌شوند.
+
+---
+
 ## ۳) بودجه‌ی عملکرد (مال `PERF`)
 
 ```
@@ -138,6 +257,12 @@ HTML ≤ ۵۰KB | CSS ≤ ۳۰KB gzip | JS ≤ ۵۰KB gzip
 - [ ] بدون `composer.json` / `vendor/`
 - [ ] `functions.php` زیر ۱۰ خط و فقط bootstrap است
 - [ ] درخت فایل‌ها با این سند یکی است
+- [ ] نام قالب = برند + «نوین» (نمایشی) و `{brand}-novin` (slug/text domain)
+- [ ] **موتور پردازش:** `app/Engine/` با Compiler + Container + Pipeline + Events و کش کامپایل فعال است
+- [ ] **پنل تنظیمات:** ۷ تب (هدر، فوتر، فروشگاه، صفحات، سئو، بهینه‌سازی، بروزرسانی) با Settings API و sanitize
+- [ ] **بروزرسانی patch:** `patches/manifest.json` + اعمال با هش/پشتیبان/nonce کار می‌کند
+- [ ] **فونت IranSans:** `fonts.css` با swap، `--font-sans` از IRANSans، وزن‌های غیراستفاده حذف‌اند
+- [ ] **کپی‌رایت فوتر:** «مجموعه فناوری اطلاعات آمل نوین» + لینک amolnovin.ir در همه‌ی الگوها
 - [ ] هر view با موتور مینی-Blade کامپایل می‌شود (بدون خطا)
 - [ ] manifest Vite خوانده می‌شود؛ fallback no-build هم کارا است
 - [ ] `theme.json` با `tokens.css` هم‌خوان است
