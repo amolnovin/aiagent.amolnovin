@@ -20,6 +20,7 @@
     "dynamic_data": "no hardcoded Persian prose (>= 40 chars) in views: every block is fed from WordPress data/options/WC; docs/content-manifest.md (content extracted from the HTML) is produced by CONV and handed to seeding; QA proves liveness by editing data in admin -> front updates",
     "woocommerce_templates": "store themes: add_theme_support('woocommerce') + override templates under woocommerce/ (archive-product, single-product, cart, checkout incl. thankyou) so real WooCommerce data renders in the HTML design — default WooCommerce templates are a FAIL (standards/woocommerce-integration.md, QA protocol T1-T10)",
     "content_seeding": "every delivery ships a one-click idempotent Seeder (inc/seed/ or content/seed.xml) that builds pages, posts, 8-12 products, CPT records, menus and WooCommerce pages from the HTML content — a fresh install must look like the source HTML (standards/content-seeding.md)",
+    "domain_blueprints": "every project starts from config/domain-blueprints.json (20 domain blueprints: pages, home sections, CPTs, seed counts, WooCommerce decision, schema/title): TL loads it at INTAKE, ARCH reconciles with the HTML source (HTML wins), CONV prefills content-manifest, WP builds the seeder from it (knowledge/domain-blueprints.md)",
     "zero_fatal": "zero fatal errors: functions.php = guards only (PHP version + is_file + require_once, admin_notices allowed); every PHP file has ABSPATH guard; no global function/class redeclaration; gated requires for plugin-dependent code; view cache invalidated by theme version; gate = python3 scripts/validate_theme.py release/{slug}/ must exit 0"
   },
   "shared_knowledge": [
@@ -31,7 +32,9 @@
     "scripts/validate_theme.py",
     "knowledge/real-themes-survey.md",
     "standards/woocommerce-integration.md",
-    "standards/content-seeding.md"
+    "standards/content-seeding.md",
+    "knowledge/domain-blueprints.md",
+    "config/domain-blueprints.json"
   ],
   "templates": [
     "templates/PROJECT_BRIEF.md",

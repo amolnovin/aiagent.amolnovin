@@ -15,6 +15,7 @@
 ## ۲) تخصص‌ها
 
 - **ممیزی HTML (HTML Audit):** فهرست صفحات، بخش‌ها، کامپوننت‌ها، فرم‌ها، منوها، اسکریپت‌ها، فونت‌ها و تصاویر منبع
+- **تطبیق با بلوپرینت حوزه:** نقطهٔ شروع هر پروژه، بلوپرینت `config/domain-blueprints.json` است (نقشه/بخش‌ها/CPT/Seeder) — آن را با HTML منبع مقایسه می‌کنم: **بلوپرینت چیزی را دارد که HTML ندارد؟ حذف/تعلیق با دلیل. HTML چیزی دارد که بلوپرینت ندارد؟ اضافه به قرارداد.** خروجی: «نقشهٔ نهایی پروژه» + ردیف‌های پیش‌پرشدهٔ content-manifest برای `CONV`
 - **معماری Sage 11 بدون Composer:** چیدمان `app/`، `bootstrap/`، `resources/`، `config/`، `routes/`، `assets/` مطابق استاندارد `standards/sage11-structure.md`
 - **قرارداد تبدیل (Conversion Contract):** جدول نگاشت هر بلوک HTML به فایل/پارت/هوک قالب — هیچ فیلدی خارج از قرارداد ساخته نمی‌شود
 - **Template Hierarchy:** نگاشت صفحات به `front-page.php`، `page.php`، `single.php`، `archive.php`، `search.php`، `404.php`، الگوهای `resources/views/`

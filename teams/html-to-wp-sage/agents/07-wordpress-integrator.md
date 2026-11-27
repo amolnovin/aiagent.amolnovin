@@ -76,6 +76,9 @@ inc/seed/{Seeder,pages,posts,products,taxonomy,settings,cpts}.php   ← یا con
 ```
 اجرای یک‌کلیکی از پنل (nonce + `manage_options` + ایدمپوتنت)؛ ورودی: `docs/content-manifest.md`؛
 خروجی: برگه‌ها/نوشته‌ها/محصولات/منوها/صفحات WC — مرجع: `standards/content-seeding.md`.
+**ساختار CPTها و تعداد رکوردهای Seeder از بلوپرینت حوزه می‌آید** (`config/domain-blueprints.json` —
+مثلاً فروشگاهی: ۱۲ محصول/۴ دسته؛ رستوران: ۱۸ آیتم منو؛ املاک: ۱۲ ملک) — `content-manifest.md`
+مقادیر نهایی (متن‌ها/تصاویر واقعی HTML) را جایگزین می‌کند.
 
 ## ۴) چک‌لیست بازبینی من روی خروجی بقیه
 
