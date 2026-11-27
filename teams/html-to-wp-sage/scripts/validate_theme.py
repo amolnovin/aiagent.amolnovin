@@ -15,6 +15,9 @@ validate_theme.py — دروازه‌ی کنترل کیفیت قالب (تیم h
   6. نبودِ تکراری توابع/کلاس‌های سراسری بین فایل‌ها
   7. ممنوعیت‌ها: vendor/ و composer.json؛ require بدون once؛ هوک در functions.php
   8. patches/: manifest با sha256 برای همهٔ فایل‌ها
+  9. ووکامرس: add_theme_support + override فروشگاه/تک‌محصول/سبد/تسویه (woocommerce-integration.md)
+ 10. محتوای استاتیک: هیچ پاراگراف فارسی هاردکد در viewها (قانون دادهٔ زنده)
+ 11. Seeder محتوا: inc/seed/ یا content/seed.xml (content-seeding.md)
 
 خروجی: گزارش خط‌به‌خط + exit code (0 = سبز، 1 = قرمز)
 """
@@ -420,6 +423,182 @@ def check_patches(root: str) -> None:
             ok(f"{rel_m}: {len(files)} فایل، هش‌ها تطابق دارد")
 
 
+def check_woocommerce(root: str) -> None:
+    print("\n[9] ووکامرس — override قالب‌ها (woocommerce-integration.md)")
+    files = php_files(root)
+    woo_declared = False
+    for path in files:
+        text = read(path)
+        if re.search(r"""add_theme_support\(\s*['"]woocommerce['"]""", text):
+            woo_declared = True
+            break
+    woo_dir = os.path.join(root, "woocommerce")
+    has_woo_dir = os.path.isdir(woo_dir)
+
+    if not woo_declared and not has_woo_dir:
+        warn(
+            "علامت ووکامرسی پیدا نشد — اگر حوزه فروشگاهی است، "
+            "add_theme_support('woocommerce') + پوشهٔ woocommerce/ الزامی است"
+        )
+        return
+
+    if has_woo_dir and not woo_declared:
+        bad("پوشهٔ woocommerce/ هست ولی add_theme_support('woocommerce') ثبت نشده")
+    elif woo_declared:
+        ok("add_theme_support('woocommerce') ثبت شده")
+
+    if not has_woo_dir:
+        bad(
+            "پوشهٔ woocommerce/ وجود ندارد — صفحات تک‌محصول/سبد/تسویه قالب پیش‌فرض WC می‌شوند "
+            "(woocommerce-integration.md §2)"
+        )
+        return
+
+    # حداقل overrideها: هر کدام فایل یا پوشه با محتوا
+    required = {
+        "فروشگاه/آرشیو": ["archive-product.php"],
+        "تک‌محصول": ["single-product.php", "content-single-product.php", "single-product"],
+        "سبد خرید": ["cart"],
+        "تسویه": ["checkout"],
+    }
+    for label, candidates in required.items():
+        found = False
+        for rel in candidates:
+            target = os.path.join(woo_dir, rel)
+            if os.path.isfile(target):
+                found = True
+                break
+            if os.path.isdir(target) and os.listdir(target):
+                found = True
+                break
+        if found:
+            ok(f"override موجود: {label}")
+        else:
+            bad(f"override ندارد: {label} → {candidates[0]} باید در woocommerce/ باشد")
+
+
+def check_static_views(root: str) -> None:
+    print("\n[10] محتوای استاتیک در viewها (قانون دادهٔ زنده)")
+    views_dir = os.path.join(root, "resources", "views")
+    if not os.path.isdir(views_dir):
+        for cand in ("views", "templates"):
+            if os.path.isdir(os.path.join(root, cand)):
+                views_dir = os.path.join(root, cand)
+                break
+
+    targets = []
+    if os.path.isdir(views_dir):
+        for dirpath, dirnames, filenames in os.walk(views_dir):
+            dirnames[:] = [d for d in dirnames if d not in ("node_modules",)]
+            for name in filenames:
+                if name.endswith((".blade.php", ".php")):
+                    targets.append(os.path.join(dirpath, name))
+    # فایل‌های قالب سطح ریشه (قالب‌های کلاسیک: front-page.php، page.php، …)
+    for name in os.listdir(root):
+        if name.endswith(".php") and name != "functions.php":
+            targets.append(os.path.join(root, name))
+    if not targets:
+        warn("فایل‌های view پیدا نشد — بررسی محتوای استاتیک انجام نشد")
+        return
+    files_to_scan = targets
+
+    # حداقل ۴۰ حرف فارسی پشت‌سرهم (با فاصله/نگاره) = پاراگراف هاردکد
+    persian_run = re.compile(r"[؀-ۿ][؀-ۿ\s،؛؟.·ـ]{38,}[؀-ۿ]")
+    findings = []
+    checked = 0
+    seen = set()
+    for path in files_to_scan:
+        if path in seen:
+            continue
+        seen.add(path)
+        rel = os.path.relpath(path, root)
+        # پنل ادمین/تنظیمات: برچسب‌های UI کوتاه‌اند — استثنا
+        low = rel.lower().replace("\\", "/")
+        if any(seg in low for seg in ("/admin", "/settings", "/panel", "/seed")):
+            continue
+        checked += 1
+        text = read(path)
+        # حذف کامنت‌های blade
+        text = re.sub(r"\{\{--.*?--\}\}", " ", text, flags=re.S)
+        # حذف عبارت‌های خروجی {{ }} و {!! !!} (داده/ترجمه داخلشان است)
+        text = re.sub(r"\{\{.*?\}\}", " ", text, flags=re.S)
+        text = re.sub(r"\{!!.*?!!\}", " ", text, flags=re.S)
+        # حذف فراخوانی‌های ترجمه/escape روی همان خط
+        lines = []
+        for line in text.splitlines():
+            if re.search(
+                r"__\(|esc_html__|esc_attr__|_e\(|@lang|wp_kses|get_theme_mod|the_title|the_content|wc_price",
+                line,
+            ):
+                lines.append("")
+            else:
+                lines.append(line)
+        body = "\n".join(lines)
+        for m in persian_run.finditer(body):
+            snippet = m.group(0).strip().replace("\n", " ")[:70]
+            findings.append(f"{rel}: «{snippet}…»")
+
+    if findings:
+        for item in findings[:8]:
+            bad(f"متن استاتیک در view: {item}")
+        if len(findings) > 8:
+            bad(f"… و {len(findings) - 8} متن استاتیک دیگر")
+        bad(
+            "هر پاراگراف باید از دادهٔ وردپرس/تنظیمات بیاید "
+            "(conversion-checklist.md §2 + content-seeding.md)"
+        )
+    else:
+        ok(f"{checked} فایل view بدون پاراگراف فارسی هاردکد")
+
+
+def check_seeder(root: str) -> None:
+    print("\n[11] بذرگذاری محتوا (content-seeding.md)")
+    seed_xml = [
+        p
+        for p in (
+            os.path.join(root, "content", "seed.xml"),
+            os.path.join(root, "content", "demo.xml"),
+            os.path.join(root, "seed.xml"),
+        )
+        if os.path.isfile(p)
+    ]
+    seed_dirs = [
+        p
+        for p in (os.path.join(root, "inc", "seed"), os.path.join(root, "app", "Seed"), os.path.join(root, "seed"))
+        if os.path.isdir(p) and os.listdir(p)
+    ]
+    seed_fn = False
+    for path in php_files(root):
+        if re.search(r"function\s+\w*seed\w*\s*\(", read(path), re.I):
+            seed_fn = True
+            break
+    manifest = [
+        p
+        for p in (
+            os.path.join(root, "docs", "content-manifest.md"),
+            os.path.join(root, "content", "content-manifest.md"),
+        )
+        if os.path.isfile(p)
+    ]
+
+    if seed_xml or seed_dirs or seed_fn:
+        src = (
+            os.path.relpath(seed_xml[0], root)
+            if seed_xml
+            else (os.path.relpath(seed_dirs[0], root) if seed_dirs else "تابع seed")
+        )
+        ok(f" Seeder موجود: {src}")
+    else:
+        bad(
+            "Seeder محتوا وجود ندارد — هیچ برگه/نوشته/محصولی ساخته نمی‌شود "
+            "(inc/seed/ یا content/seed.xml — content-seeding.md §3)"
+        )
+    if manifest:
+        ok("docs/content-manifest.md موجود است (فهرست محتوای استخراج‌شده)")
+    else:
+        warn("docs/content-manifest.md نیست — CONV باید فهرست محتوا برای Seeder تحویل دهد")
+
+
 def main() -> int:
     if len(sys.argv) != 2:
         print(__doc__)
@@ -444,6 +623,9 @@ def main() -> int:
         check_duplicates(root)
         check_forbidden(root, theme_dir)
         check_patches(root)
+        check_woocommerce(root)
+        check_static_views(root)
+        check_seeder(root)
 
     print("=" * 60)
     print(f"نتیجه: {len(PASSES)} PASS · {len(WARNS)} WARN · {len(FAILS)} FAIL")
