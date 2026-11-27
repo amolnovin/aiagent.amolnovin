@@ -44,6 +44,8 @@
 | `standards/content-seeding.md` | **بذرگذاری محتوا**: content-manifest از HTML → Seeder یک‌کلیکی (برگه/نوشته/محصول/منو) |
 | `scripts/validate_theme.py` | **دروازهٔ اعتبارسنجی قالب** (php -l + ساختار + گاردها + patches) — قبل از PASS مرحله ۱۳ |
 | `knowledge/real-themes-survey.md` | تحلیل ساختار و پنل تنظیمات ۸ قالب واقعی آمل نوین (مبنای استانداردها) |
+| `knowledge/domain-blueprints.md` | **بلوپرینت ۲۰ حوزه‌ی کاری**: نقشهٔ صفحات، بخش‌های خانه، CPT، Seeder، SEO و بلورک‌های هر حوزه |
+| `config/domain-blueprints.json` | نسخهٔ ماشین‌خوان ۲۰ بلوپرینت (bar برای TL/ARCH/CONV/WP در INTAKE و AUDIT) |
 | `templates/PROJECT_BRIEF.md` | فرم بریف پروژه (پر کن، بده به `TL`) |
 | `templates/CONVERSION_REPORT.md` | قالب گزارش تبدیل ۱:۱ |
 | `prompts/QUICKSTART.md` | دستورات راه‌انداز سریع |
@@ -56,6 +58,9 @@
 فایل‌های HTML و حوزه‌ی کاری را بنویسید. مثال:
 
 > «این ۵ فایل HTML را برای حوزه‌ی پزشکی به قالب وردپرس Sage 11 بدون Composer تبدیل کنید؛ RTL، نوبت‌دهی، Lighthouse بالای ۹۰ و سئوی محلی.»
+
+با گفتن **نام حوزه** (یکی از ۲۰ حوزهٔ `config/domain-blueprints.json`)، تیم خودکار نقشهٔ اولیه،
+داده‌ها، CPTها و تعداد Seeder پیش‌فرض را بار می‌کند و با HTML ورودی تطبیق می‌دهد.
 
 خط تولید این‌طور جواب می‌دهد:
 

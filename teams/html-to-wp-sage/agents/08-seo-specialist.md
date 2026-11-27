@@ -15,6 +15,7 @@
 ## ۲) تخصص‌ها
 
 - **مدیریت title & meta:** `add_theme_support('title-tag')`، قالب توضیح متا از طریق افزونه‌ی سئو (Yoast/RankMath) — و fallback داخلی تمیز
+- **نقطهٔ شروع حوزه:** الگوی عنوان و انواع Schema از بلوپرینت حوزه (`config/domain-blueprints.json` → بخش `seo`؛ مثلاً پزشکی: `MedicalClinic`، فروشگاهی: `Product`) — سپس با HTML/محتوای واقعی پروژه تطبیق و نهایی می‌شود
 - **داده‌ی ساخت‌یافته (Schema.org):** JSON-LD بر اساس حوزه‌ی کاری:
   - شرکتی: `Organization` + `WebSite`
   - پزشکی: `MedicalClinic` + `LocalBusiness` + `BreadcrumbList`
