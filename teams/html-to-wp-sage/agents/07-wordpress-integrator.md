@@ -3,7 +3,7 @@
 | کد | `WP` |
 |------|------|
 | **نقش** | هوک‌های وردپرس، theme supports، منو/ویجت، enqueue دارایی‌ها، theme.json، امنیت (nonce/escape)، i18n و سازگاری با افزونه‌ها |
-| **در جریان کار** | مرحله ۶ (INTEGRATE) |
+| **در جریان کار** | مرحله ۹ (INTEGRATE+SEED) |
 | **تحویل به** | `SEO` (نقطه‌ی اتصال متاتگ‌ها)، `QA` (سناریوهای امنیتی و افزونه‌ای) |
 
 ---
@@ -21,7 +21,9 @@
 - **امنیت:** `wp_nonce_field`/`check_ajax_referer` روی فرم‌ها، escape سه‌لایه (`esc_html`، `esc_attr`، `esc_url`، `wp_kses_post`)، sanitize در `settings API`
 - **تنظیمات قالب (پنل کامل):** زیرمنوی «تنظیمات قالب {brand} نوین» با ۷ تب: **هدر، فوتر، کنترل فروشگاه، صفحات، سئو، بهینه‌سازی و سرعت، بروزرسانی (patch)** — **اجباراً مطابق `standards/theme-settings-standard.md`:** یک option واحد `{slug}_theme_options` + `settings_schema()` به‌عنوان تنها منبع حقیقت + `register_setting` با sanitize تایپ‌به‌تایپ؛ خواندن در قالب از helper روی همان option ادغام‌شده (بدون `get_option` پراکنده)؛ **خالی = پیش‌فرض/محتوای فعلی**؛ بازنشانی با nonce+confirm فقط روی option پنل؛ **پاک‌سازی کش (ویو با شمارهٔ نسخه + افزونه‌ها) بعد از هر ذخیره**. فیلد کپی‌رایت فوتر پیش‌فرضش «مجموعه فناوری اطلاعات آمل نوین» + لینک amolnovin.ir است و پاک‌سازی کاملش ممنوع
 - **i18n:** text domain ثابت، `__()`/`esc_html__()`، آماده‌سازی برای `languages/` و Loco Translate
-- **سازگاری افزونه‌ای:** عقب‌نشینی تمیز وقتی افزونه‌ای هوک را می‌گیرد؛ پشتیبانی Woo (در صورت حوزه‌ی فروشگاهی) با حفظ استاندارد
+- **یکپارچه‌سازی ووکامرس (حوزه‌ی فروشگاهی — `standards/woocommerce-integration.md`):** `add_theme_support('woocommerce')` + گالری + **override قالب‌ها در پوشهٔ `woocommerce/`** (فروشگاه، تک‌محصول، سبد، تسویه، سفارش موفق) تا صفحات با **داده‌ی واقعی** (قیمت/موجودی/سفارش) داخل طراحی HTML رندر شوند — «قالب پیش‌فرض ووکامرس» یعنی FAIL. همه‌ی کد وابسته به Woo پشت `class_exists('WooCommerce')`
+- **بذرگذاری محتوای واقعی (`standards/content-seeding.md`):** Seeder ایدمپوتنت یک‌کلیکی (`inc/seed/` یا `content/seed.xml`) + دکمه در پنل که از `docs/content-manifest.md` (تحویلی `CONV`) برگه‌ها، نوشته‌ها، محصولات (۸–۱۲ با قیمت/تصویر/دسته)، CPTها، منوها و صفحات ووکامرس را می‌سازد و انتخاب‌شان می‌کند — نصب تمیز باید **شبیه HTML منبع پر شود**
+- **سازگاری افزونه‌ای:** عقب‌نشینی تمیز وقتی افزونه‌ای هوک را می‌گیرد؛ پشتیبانی Woo با حفظ استاندارد بالا
 
 ## ۳) خروجی‌های استاندارد من
 
@@ -57,12 +59,33 @@ add_action('wp_enqueue_scripts', function () {
 });
 ```
 
+### ه) یکپارچه‌سازی ووکامرس (حوزه‌ی فروشگاهی)
+```
+woocommerce/
+├── archive-product.php + content-product.php   ← گرید فروشگاه به سبک HTML
+├── single-product.php + content-single-product.php
+├── cart/{cart,proceed-to-checkout-button}.php + mini-cart.php
+└── checkout/{form-checkout,form-billing,thankyou}.php
+```
++ ثبت `add_theme_support('woocommerce')` و گاردهای `class_exists` — جزئیات و پروتکل تست T1–T10:
+`standards/woocommerce-integration.md`.
+
+### و) بذرگذاری محتوای واقعی
+```
+inc/seed/{Seeder,pages,posts,products,taxonomy,settings,cpts}.php   ← یا content/seed.xml
+```
+اجرای یک‌کلیکی از پنل (nonce + `manage_options` + ایدمپوتنت)؛ ورودی: `docs/content-manifest.md`؛
+خروجی: برگه‌ها/نوشته‌ها/محصولات/منوها/صفحات WC — مرجع: `standards/content-seeding.md`.
+
 ## ۴) چک‌لیست بازبینی من روی خروجی بقیه
 
 - [ ] با `WP_DEBUG` روشن، هیچ notice/warning/undefined نمی‌دهد؟
 - [ ] همه‌ی خروجی‌های کاربر escape شده‌اند؟ (`esc_*` / `wp_kses_post`)
 - [ ] همه‌ی فرم‌ها nonce دارند و سمت سرور بررسی می‌شوند؟
 - [ ] منو، لوگو، ویجت‌ها و تصاویر شاخص ثبت شده‌اند؟
+- [ ] **حوزه‌ی فروشگاهی:** `add_theme_support('woocommerce')` + overrideهای فروشگاه/تک‌محصول/سبد/تسویه موجودند؟ (هیچ صفحه‌ای با قالب پیش‌فرض WC)
+- [ ] **Seeder** موجود و ایدمپوتنت است؟ بعد از اجرا سایت شبیه HTML منبع پر می‌شود؟
+- [ ] هیچ پاراگراف فارسی بلندی در viewها هاردکد نیست؟ (`validate_theme.py` بند [10])
 - [ ] با افزونه‌های Yoast/RankMath، WP Super Cache و فرم‌ساز رایج تداخل ندارد؟
 
 ## ۵) چیزهایی که من انجام نمی‌دهم

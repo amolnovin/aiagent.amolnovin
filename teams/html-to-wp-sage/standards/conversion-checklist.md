@@ -28,13 +28,21 @@
 | `<footer>` | `layout/footer.blade.php` | ویجت + تنظیمات شبکه‌های اجتماعی |
 | اسکریپت ثالث | تصمیم `ARCH` | نگهداری/حذف/بازنویسی + enqueue از `JS` |
 | فونت (`@font-face`) | `assets/fonts/` | subset فارسی + preload + `swap` |
+| `<section>` فروشگاه/گرید محصول | `woocommerce/archive-product.php` + `content-product.php` | **override ووکامرس** (`woocommerce-integration.md`) |
+| صفحهٔ تک‌محصول | `woocommerce/single-product.php` + `content-single-product.php` | دادهٔ واقعی WC (قیمت/موجودی/گالری) |
+| سبد خرید / تسویه / سفارش | `woocommerce/cart/*` + `woocommerce/checkout/*` | **هرگز قالب پیش‌فرض WC** |
+| لوپ محصول/مقاله با دادهٔ نمونه | Seeder (`inc/seed/` یا `content/seed.xml`) | `content-seeding.md` — داده از HTML منبع ساخته می‌شود |
 
 ---
 
 ## ۲) قواعد تبدیل
 
 1. **وفاداری اول:** ساختار DOM، کلاس‌ها و ترتیب بصری حفظ می‌شود؛ تغییر ظاهر کار `CSS` است.
-2. **استاتیک ممنوع:** هر متن/لینک/تصویری که کارفرما باید بعداً عوض کند، به theme mod / تنظیمات قالب / محتوای واقعی وصل می‌شود.
+2. **قانون داده‌ی زنده (استاتیک ممنوع):** هر متن/لینک/تصویری که کارفرما باید بعداً عوض کند، به theme mod /
+   تنظیمات قالب / محتوای وردپرس وصل می‌شود. **هیچ پاراگراف/متن فارسیِ بلند (≥ ۴۰ نویسه) در فایل‌های view
+   هاردکد نمی‌شود** — اگر متنی در HTML هست، یا به داده‌ی وردپرس (برگه/نوشته/محصول/تنظیمات) وصل می‌شود یا
+   برچسب UI کوتاه با `__()`. لیست «منبع هر متن» در `docs/content-manifest.md` ثبت و به `WP` برای
+   بذرگذاری (`content-seeding.md`) تحویل داده می‌شود. آزمون QA: تغییر مقدار در ادمین → تغییر فوری در front.
 3. **escape اجباری:** `{{ }}` یا `esc_*` برای هر خروجی پویا؛ `{!! !!}` فقط با `wp_kses_post` و دلیل مکتوب.
 4. **فرم امن:** `wp_nonce_field` + بررسی سمت سرور + پیام خطای فارسی + حالت loading/success.
 5. **لوپ تمیز:** بدون کوئری اضافه در هر تکرار (هماهنگ با `PERF` برای transient).
@@ -55,7 +63,12 @@ search                 404
 ├─ partials: nav, footer, hero, cta, breadcrumbs
 ├─ components: card, button, badge, section-title
 └─ forms: contact (همیشه) + booking|newsletter (طبق حوزه)
+
+حوزهٔ فروشگاهی (علاوه بر موارد بالا — مرجع: woocommerce-integration.md):
+woocommerce/ archive-product + single-product + cart/ + checkout/ (شامل thankyou)
 ```
+
+**همه‌ی این صفحات بعد از بذرگذاری (`content-seeding.md`) با داده‌ی واقعی پر می‌شوند — تحویل «قالب خالی» نداریم.**
 
 ---
 
@@ -66,5 +79,7 @@ search                 404
 - [ ] همه‌ی تصاویر `alt` واقعی + آماده‌ی `srcset` دارند
 - [ ] همه‌ی فرم‌ها nonce + escape + پیام خطای فارسی
 - [ ] هیچ href/#، متن لورم‌ایپسوم یا دامنه‌ی نمونه باقی نمانده
+- [ ] **صفر متن فارسی بلند (≥ ۴۰ نویسه) هاردکد در viewها** — همه به داده/تنظیمات/`__()` وصل‌اند
+- [ ] **`docs/content-manifest.md`** برای تحویل به `WP` (بذرگذاری) کامل است
 - [ ] خروجی در WP_DEBUG بدون notice و بدون خطای کنسول
 - [ ] رگرسیون چشمی با HTML منبع: هر ۳ عرض ۳۶۰/۷۶۸/۱۴۴۰
